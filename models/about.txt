@@ -1,0 +1,10 @@
+
+Esta pasta armazena os modelos treinados.
+
+Exemplos:
+
+random_forest.pkl
+xgboost.pkl
+
+Também podem ser armazenadas métricas
+e relatórios de avaliação.
