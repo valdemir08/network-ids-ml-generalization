@@ -1,9 +1,0 @@
-flows extraídos
----------------------------
-Dados intermediários do pipeline.
-
-Aqui ficam estruturas derivadas dos PCAPs,
-como flows de rede.
-
-Esses dados ainda não são datasets prontos
-para machine learning.
