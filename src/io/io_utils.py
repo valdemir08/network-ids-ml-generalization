@@ -10,6 +10,9 @@ def save_parquet(df, path):
     df.to_parquet(path)
 
 def load_parquet(path, columns=None):
+    """
+    carrega parquet de forma otimizada, caso columns seja fornecido
+    """
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(f"O arquivo {path} não existe")

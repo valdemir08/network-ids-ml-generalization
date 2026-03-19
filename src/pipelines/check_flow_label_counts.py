@@ -34,27 +34,16 @@ def check_counts(dataset_name: str, scenario: str):
         print("Coluna de label não encontrada")
 
     # ---------- comparação ----------
-    print("\n===== COMPARISON =====")
+    print("\n===== COMPARAÇÃO=====")
 
     ratio = flows_count / labels_count
     print("Flows / Labels ratio:", round(ratio, 3))
 ###########################################
-    print("\n===== FLOW COLUMNS =====")
+    print("\n===== FLOW COLS =====")
     print(flows_df.columns.tolist())
 
-    print("\n===== LABEL COLUMNS =====")
+    print("\n===== LABEL COLS =====")
     print(labels_df.columns.tolist())
-
-"""
-    print("\n===== IP CHECK =====")
-
-    flow_ips = set(flows_df["src_ip"]).union(set(flows_df["dst_ip"]))
-
-    label_ips = set(labels_df[" Source IP"]).union(set(labels_df[" Destination IP"]))
-
-    print("Unique IPs in flows:", len(flow_ips))
-    print("Unique IPs in labels:", len(label_ips))
-"""
 
 if __name__ == "__main__":
 

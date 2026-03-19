@@ -37,7 +37,15 @@ def convert_labels_timestamp(df, timestamp_col="Timestamp"):
     Converte a coluna Timestamp do csv para datetime e
     cria ts_ms em milissegundos desde epoch.
     """
-    df = df.copy()
+
     df[timestamp_col] = pd.to_datetime(df[timestamp_col], format="%m/%d/%Y %H:%M")
-    df["ts_ms"] = (df[timestamp_col].astype("int64") // 1_000_000)
+    df["ts_ms"] = (df[timestamp_col].astype("int64") // 1_000)
+    #nota: verificar // 1_000 (conversão)
+
     return df
+
+def padronize_cols_name(df, column_mapping: dict):
+    """
+    padroniza nomes das colunas conforme mapeamento fornecido.
+    """
+    return df.rename(columns=column_mapping)
