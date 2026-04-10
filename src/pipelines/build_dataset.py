@@ -5,7 +5,7 @@ from src.flows.flow_matching import create_flow_key,create_bidirectional_flow_ke
 from src.configs.paths import INTERMEDIATE_DATA_DIR, PROCESSED_DATA_DIR
 
 
-def build_dataset(flows_file, labels_file, output_file, time_tolerance=10000):
+def build_dataset(flows_file, labels_file, output_file, time_tolerance):
     print("Carregando flows...")
     flows = load_parquet(flows_file)
     print(f"Flows carregados: {len(flows)} registros")
@@ -28,16 +28,29 @@ def build_dataset(flows_file, labels_file, output_file, time_tolerance=10000):
 
     print("linkando flows com labels...")
 
+
     merged = match_flows(flows, labels, time_tolerance)
 
+    # remover todos os nan
+    merged_clean = merged.dropna(subset=["label"])
+
     print(f"Salvando resultado em {output_file}...")
-    merged.to_parquet(output_file, index=False)
+    #merged.to_parquet(output_file, index=False)
+    save_parquet(merged_clean, output_file)
 
     # estatísticas finais
     matched = merged['label'].notna().sum()
     print(f"Total de flows com label: {matched} ({matched / len(merged) * 100:.2f}%)")
     print("Concluído!")
 
+TIME_TOLERANCES = {
+    "10s": 10_000,
+    "30s": 30_000,
+    "1min": 60_000,
+    "2min": 120_000,
+    "3min": 180_000,
+    "5min": 300_000,
+}
 
 if __name__ == "__main__":
     dataset_name = "cicids2017"
@@ -45,6 +58,6 @@ if __name__ == "__main__":
 
     flows_file = f"{INTERMEDIATE_DATA_DIR}/{dataset_name}/{scenario}_flows.parquet"
     labels_file = f"{INTERMEDIATE_DATA_DIR}/{dataset_name}/{scenario}_labels.parquet"
-    output_file = f"{PROCESSED_DATA_DIR}/{dataset_name}/{scenario}_labels.parquet"
+    output_file = f"{PROCESSED_DATA_DIR}/{dataset_name}/{scenario}.parquet"
 
-    build_dataset(flows_file, labels_file, output_file, time_tolerance=120000)
+    build_dataset(flows_file, labels_file, output_file, time_tolerance=TIME_TOLERANCES["1min"])

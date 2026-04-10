@@ -1,7 +1,7 @@
 #merge e limpeza de csvs com labels de ataque
 
 from src.configs.datasets import DATASETS
-from src.data_processing.dataset_utils import dataset_cleanup, convert_labels_timestamp, padronize_cols_name
+from src.data_processing.dataset_utils import dataset_cleanup, convert_to_datetime, create_column_ts_ms, padronize_cols_name, adjust_time_for_cic_datasets, apply_timezone_offset
 from src.io.io_utils import save_parquet
 from src.configs.paths import PROJECT_ROOT, INTERMEDIATE_DATA_DIR
 from src.configs.column_mappings import CICIDS_MAPPING
@@ -40,10 +40,14 @@ def prepare_labels(dataset_name, scenario):
 
     df = dataset_cleanup(df)
     df = padronize_cols_name(df, CICIDS_MAPPING)
-    df = convert_labels_timestamp(df)
-
-    print(f"ts_ms sample: {df['ts_ms'].iloc[0]}")
-    print(f"ts_ms dtype: {df['ts_ms'].dtype}")
+    #
+    df = convert_to_datetime(df)
+    #adicionar condicionais para essa função. só executa em bases cic
+    df = adjust_time_for_cic_datasets(df,"Timestamp")
+    df = apply_timezone_offset(df, "Timestamp", 3)
+    df = create_column_ts_ms(df)
+    #ideal: criar novo arquivo de configurações para adicionar vars como timestamp, e fuso
+    #estudar também uma possibilidade de melhoria no nome da coluna, outros datasets não terão o mesmo nome
 
     save_parquet(df, output_path)
 
