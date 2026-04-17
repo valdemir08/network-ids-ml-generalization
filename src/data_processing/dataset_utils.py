@@ -98,3 +98,8 @@ def apply_timezone_offset(df, column_name, offset_hours):
     df[column_name] = df[column_name] + pd.Timedelta(hours=offset_hours)
 
     return df
+
+def create_column_dataset_name(df, dataset_name):
+    df = df.copy()
+    df["dataset_name"] = dataset_name
+    return df

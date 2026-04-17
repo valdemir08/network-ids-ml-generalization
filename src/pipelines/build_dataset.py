@@ -3,9 +3,10 @@ from pathlib import Path
 from src.io.io_utils import load_parquet, save_parquet
 from src.flows.flow_matching import create_flow_key,create_bidirectional_flow_key,match_flows
 from src.configs.paths import INTERMEDIATE_DATA_DIR, PROCESSED_DATA_DIR
+from src.data_processing.dataset_utils import create_column_dataset_name
 
 
-def build_dataset(flows_file, labels_file, output_file, time_tolerance):
+def build_dataset(flows_file, labels_file, output_file, dataset_name, time_tolerance):
     print("Carregando flows...")
     flows = load_parquet(flows_file)
     print(f"Flows carregados: {len(flows)} registros")
@@ -33,6 +34,8 @@ def build_dataset(flows_file, labels_file, output_file, time_tolerance):
 
     # remover todos os nan
     merged_clean = merged.dropna(subset=["label"])
+    merged_clean = create_column_dataset_name(merged_clean, dataset_name)
+
 
     print(f"Salvando resultado em {output_file}...")
     #merged.to_parquet(output_file, index=False)
@@ -60,4 +63,4 @@ if __name__ == "__main__":
     labels_file = f"{INTERMEDIATE_DATA_DIR}/{dataset_name}/{scenario}_labels.parquet"
     output_file = f"{PROCESSED_DATA_DIR}/{dataset_name}/{scenario}.parquet"
 
-    build_dataset(flows_file, labels_file, output_file, time_tolerance=TIME_TOLERANCES["1min"])
+    build_dataset(flows_file, labels_file, output_file, dataset_name, time_tolerance=TIME_TOLERANCES["1min"])
