@@ -22,7 +22,52 @@ DATASETS = {
                     "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
                     "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
                 ]
-            }
+            },
+
+            "monday": {
+
+                "pcaps": [
+                    "Monday-WorkingHours.pcap"
+                ],
+
+                "labels": [
+                    "Monday-WorkingHours.pcap_ISCX.csv",
+                ]
+            },
+
+            "thursday": {
+
+                "pcaps": [
+                    "Thursday-WorkingHours.pcap"
+                ],
+
+                "labels": [
+                    "Thursday-WorkingHours-Afternoon-Infilteration.pcap_ISCX.csv",
+                    "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+                ]
+            },
+
+            "tuesday": {
+
+                "pcaps": [
+                    "Tuesday-WorkingHours.pcap"
+                ],
+
+                "labels": [
+                    "Tuesday-WorkingHours.pcap_ISCX.csv",
+                ]
+            },
+
+            "wednesday": {
+
+                "pcaps": [
+                    "Wednesday-WorkingHours.pcap"
+                ],
+
+                "labels": [
+                    "Wednesday-workingHours.pcap_ISCX.csv",
+                ]
+            },
 
         }
     }

@@ -3,7 +3,8 @@ from src.configs.datasets import DATASETS
 from src.configs.paths import INTERMEDIATE_DATA_DIR
 
 
-def extract_from_pcap(dataset_name: str, scenario: str):
+def extract_from_pcap(dataset_name, scenario):
+    print(f"Extraindo flows do pcap para {dataset_name} {scenario}")
 
     dataset = DATASETS[dataset_name]
 
@@ -21,7 +22,7 @@ def extract_from_pcap(dataset_name: str, scenario: str):
         #é dito que pcaps grandes podem gerar problemas com nfstream, sendo ideal o try
         try:
             flows = build_flows_from_pcap(pcap_path)
-            print(f"Extracted {len(flows)} flows")
+            print(f"Extraído {len(flows)} flows")
         except Exception as e:
             print(f"Error processing {pcap_path}: {e}")
             continue

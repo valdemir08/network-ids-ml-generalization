@@ -7,15 +7,11 @@ from src.data_processing.dataset_utils import create_column_dataset_name
 
 
 def build_dataset(flows_file, labels_file, output_file, dataset_name, time_tolerance):
-    print("Carregando flows...")
-    flows = load_parquet(flows_file)
-    print(f"Flows carregados: {len(flows)} registros")
-    print(f"Colunas disponíveis: {flows.columns.tolist()}")
 
-    print("Carregando labels...")
+    flows = load_parquet(flows_file)
     labels = load_parquet(labels_file)
+    print(f"Flows carregados: {len(flows)} registros")
     print(f"Labels carregadas: {len(labels)} registros")
-    print(f"Colunas disponíveis: {labels.columns.tolist()}")
 
     print("Criando chaves para matching...")
 
@@ -55,12 +51,22 @@ TIME_TOLERANCES = {
     "5min": 300_000,
 }
 
+def merge_flows_and_labels(dataset_name, scenario):
+    flows_file = f"{INTERMEDIATE_DATA_DIR}/{dataset_name}/{scenario}_flows.parquet"
+    labels_file = f"{INTERMEDIATE_DATA_DIR}/{dataset_name}/{scenario}_labels.parquet"
+    output_file = f"{PROCESSED_DATA_DIR}/{dataset_name}/{scenario}.parquet"
+
+    build_dataset(flows_file, labels_file, output_file, dataset_name, time_tolerance=TIME_TOLERANCES["1min"])
+
+
 if __name__ == "__main__":
     dataset_name = "cicids2017"
-    scenario = "friday"
+    scenario = "monday"
+    #scenario = "friday"
 
     flows_file = f"{INTERMEDIATE_DATA_DIR}/{dataset_name}/{scenario}_flows.parquet"
     labels_file = f"{INTERMEDIATE_DATA_DIR}/{dataset_name}/{scenario}_labels.parquet"
     output_file = f"{PROCESSED_DATA_DIR}/{dataset_name}/{scenario}.parquet"
 
     build_dataset(flows_file, labels_file, output_file, dataset_name, time_tolerance=TIME_TOLERANCES["1min"])
+

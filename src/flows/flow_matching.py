@@ -47,7 +47,7 @@ def match_flows_simple(flows, labels, time_tolerance):
     casar flows com labels.
     retorna coluna 'label' para cada flow.
     """
-    print("\n\n\n")
+    print("\n")
     print("Iniciando matching...")
     print(f"Tolerância: {time_tolerance / 1000:.1f}s")
 
@@ -177,7 +177,6 @@ def match_flows(flows, labels, time_tolerance):
     """
     retorna os flows originais com a coluna label adicionada
     """
-    print(f"Flows: {len(flows)} | Labels: {len(labels)}")
 
     # matching
     labels_matched = match_flows_simple(flows, labels, time_tolerance)

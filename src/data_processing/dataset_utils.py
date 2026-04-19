@@ -3,21 +3,25 @@ import pandas as pd
 
 
 def clean_column_names(df):
+    df = df.copy()
     df.columns = df.columns.str.strip()
     return df
 
 
 def replace_infinities(df):
+    df = df.copy()
     df.replace([np.inf, -np.inf], np.nan)
     return df
 
 
 def remove_duplicated_cols(df):
+    df = df.copy()
     df = df.loc[:, ~df.columns.duplicated()]
     return df
 
 
 def remove_duplicated_rows(df):
+    df = df.copy()
     df = df.drop_duplicates()
     return df
 
@@ -26,6 +30,7 @@ def dataset_cleanup(df):
     # verificar necessidade de condicionais para outros datasets
     # lembrete: estudar metodologia de limpeza dos datasets de trabalhos relacionados
     # remover comentário quando estiver pronto
+    df = df.copy()
 
     df = clean_column_names(df)
     df = replace_infinities(df)
@@ -40,10 +45,11 @@ def convert_to_datetime(df, timestamp_col="Timestamp"):
     """
     Converte a coluna Timestamp do csv para datetime e
     """
-
+    df = df.copy()
     df[timestamp_col] = pd.to_datetime(
         df[timestamp_col],
-        format="%m/%d/%Y %H:%M",
+        #format="%m/%d/%Y %H:%M",
+        dayfirst=True,
         errors="coerce")
 
 

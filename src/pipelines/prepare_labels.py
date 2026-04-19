@@ -1,4 +1,4 @@
-#merge e limpeza de csvs com labels de ataque
+# merge e limpeza de csvs com labels de ataque
 
 from src.configs.datasets import DATASETS
 from src.data_processing.dataset_utils import (
@@ -18,8 +18,24 @@ import pandas as pd
 
 PROJECT_ROOT = PROJECT_ROOT
 
-def load_and_concat_csvs(dataset_name, scenario):
 
+def read_csv_safe(path):
+    try:
+        return pd.read_csv(
+            path,
+            dtype=str,
+            low_memory=False
+        )
+    except UnicodeDecodeError:
+        return pd.read_csv(
+            path,
+            encoding="latin1",
+            dtype=str,
+            low_memory=False
+        )
+
+
+def load_and_concat_csvs(dataset_name, scenario):
     dataset_cfg = DATASETS[dataset_name]
     scenario_cfg = dataset_cfg["scenarios"][scenario]
 
@@ -31,13 +47,13 @@ def load_and_concat_csvs(dataset_name, scenario):
     for csv_file in scenario_cfg["labels"]:
         path = label_dir / csv_file
         print("Carregando:", path)
-        csvs.append(pd.read_csv(path))
+        csvs.append(read_csv_safe(path))
 
     return pd.concat(csvs, ignore_index=True)
 
 
 def prepare_labels(dataset_name, scenario):
-
+    print(f"Preparando labels para {dataset_name} {scenario}")
     output_path = (
             INTERMEDIATE_DATA_DIR
             / dataset_name
@@ -50,21 +66,15 @@ def prepare_labels(dataset_name, scenario):
     df = padronize_cols_name(df, CICIDS_MAPPING)
     #
     df = convert_to_datetime(df)
-    #adicionar condicionais para essa função. só executa em bases cic
-    df = adjust_time_for_cic_datasets(df,"Timestamp")
+    # adicionar condicionais para essa função. só executa em bases cic
+    df = adjust_time_for_cic_datasets(df, "Timestamp")
     df = apply_timezone_offset(df, "Timestamp", 3)
     df = create_column_ts_ms(df)
-    #ideal: criar novo arquivo de configurações para adicionar vars como timestamp, e fuso
-    #estudar também uma possibilidade de melhoria no nome da coluna, outros datasets não terão o mesmo nome
+    # ideal: criar novo arquivo de configurações para adicionar vars como timestamp, e fuso
+    # estudar também uma possibilidade de melhoria no nome da coluna, outros datasets não terão o mesmo nome
 
     save_parquet(df, output_path)
 
-    print(df.shape)
-    print(df.columns)
-    print(df.head())
-
 
 if __name__ == "__main__":
-
-    prepare_labels(dataset_name = "cicids2017", scenario = "friday")
-
+    prepare_labels(dataset_name="cicids2017", scenario="monday")

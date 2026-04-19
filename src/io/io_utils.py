@@ -8,6 +8,7 @@ def save_parquet(df, path):
     path.parent.mkdir(parents=True, exist_ok=True)
 
     df.to_parquet(path)
+    print(f"Salvo em {path}")
 
 def load_parquet(path, columns=None):
     """
