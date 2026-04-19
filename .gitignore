@@ -1,6 +1,7 @@
 
 datasets/intermediate/
 datasets/processed/
+datasets/final/
 **/__pycache__/
 .idea/
 .vscode/
