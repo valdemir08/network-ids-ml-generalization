@@ -27,6 +27,10 @@ def merge_processed_dataset(dataset_name):
     df_final = pd.concat(dfs, ignore_index=True)
     save_parquet(df_final, output_file)
 
+def merge_datasets(dataset_names: list[str], output_name: str):
+    # verificar necessidade de passar output_name como parâmetro
+    # lembrar que alguns datasets tem nomes parecidos ex: cicids2017 ... 2018
+    pass
 
 if __name__ == "__main__":
     merge_processed_dataset("cicids2017")

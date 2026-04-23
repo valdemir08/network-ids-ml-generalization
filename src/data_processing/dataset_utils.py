@@ -40,7 +40,7 @@ def dataset_cleanup(df):
     return df
 
 
-# função para cicids2017, provavelmente será necessário em mais bases
+
 def convert_to_datetime(df, timestamp_col="Timestamp"):
     """
     Converte a coluna Timestamp do csv para datetime e
