@@ -2,7 +2,7 @@
 colunas que não devem ser usadas no ML, não necessitam passar por análise
 """
 
-DROP_COLUMNS = {
+COLUMNS_TO_IGNORE = {
     # identificadores
     # expiration_id
     # nfdoc: Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or -1 for custom expiration.
@@ -105,7 +105,113 @@ DROP_COLUMNS = {
     # removidas por baixo impacto / irrelenvância no modelo abaixo
 
 
+
+
+
+
 }
+
+
+
+# features constantes ou quase constantes
+
+
+const_features = {
+    "dst2src_urg_packets",
+
+}
+
+# colunas ignoradas
+# alta correlação + redundância
+
+# features direcionais src2dst / dst2src dependem da orientação do fluxo,
+# que é definida pelo primeiro pacote observado no nfstream.
+# essa orientação pode ser inconsistente devido a cortes por timeout ou início da captura
+# não há garantia do comportamento da feature.
+# para reduzir viés direcional,
+# as features direcionais são removidas quando existe equivalente bidirecional.
+
+
+identical_features = {
+    # na análise de correlação ...
+    ### Direção
+
+    #['bidirectional_urg_packets', 'src2dst_urg_packets']
+    "src2dst_urg_packets",
+
+    #("bidirectional_packets", "src2dst_packets"),
+    #("bidirectional_packets", "dst2src_packets"),
+    #("src2dst_packets", "dst2src_packets"),
+    "src2dst_packets",
+    "dst2src_packets",
+
+    #("bidirectional_duration_ms", "src2dst_duration_ms"),
+    #("bidirectional_duration_ms", "dst2src_duration_ms"),
+    #("src2dst_duration_ms", "dst2src_duration_ms"),
+
+    # as 2 features de caminho possuem distribuição idêntica,
+    # src2dst/dst2src duration_ms
+        # representam informações distintas
+        # mas, possuem distribuição idêntica, e
+        # podem enviesar os modelos por conta da direção
+    "src2dst_duration_ms",
+    "dst2src_duration_ms",
+
+    #("bidirectional_ack_packets", "src2dst_ack_packets"),
+    #("bidirectional_ack_packets", "dst2src_ack_packets"),
+    #("src2dst_ack_packets", "dst2src_ack_packets"),
+    "src2dst_ack_packets",
+    "dst2src_ack_packets",
+
+    #("bidirectional_ack_packets", "src2dst_ack_packets"),
+    #("bidirectional_ack_packets", "dst2src_ack_packets"),
+    #("src2dst_ack_packets", "dst2src_ack_packets"),
+    #("bidirectional_packets", "bidirectional_ack_packets"),
+    # redundante me tcp já que praticmaente tod o pacote tcp tem uma confirmação "ack". sempre 0 em udp
+    # pode acabar virando atalho para protocolo. (verificar o que fazer com protocolo, já que é categórica)
+    "bidirectional_ack_packets",
+    "src2dst_ack_packets",
+    "src2dst_packets",
+
+
+
+    #("bidirectional_cwr_packets", "src2dst_cwr_packets"),
+    #("bidirectional_ece_packets", "dst2src_ece_packets"),
+    # média e desvio padrão próximo a 0 para todos esses casos
+    # também não performou no mutual information, mi próximo a 0 para todos esses casos
+    "bidirectional_cwr_packets",
+    "src2dst_cwr_packets",
+    "bidirectional_ece_packets",
+    "dst2src_ece_packets",
+    # não estavam nos pares de correlação, mas compartilham da média e desvio padrão próximo a 0.00, mi também irrisório
+    "src2dst_ece_packets",
+    "dst2src_cwr_packets",
+
+
+
+    #("bidirectional_syn_packets", "src2dst_syn_packets"),
+    # d2s não apareceu em correlação alta, mas indica caminho
+    # pacotes > 0 aparecem em 75% dos dados
+    # bidirectional corresponde a 30% da maior nota mi, manter por enquanto, mas testar o impacto em algum modelo de árvore
+    "src2dst_syn_packets",
+    "dst2src_syn_packets",
+    #"bidirectional_syn_packets",
+
+    #("bidirectional_fin_packets", "src2dst_fin_packets"),
+    #("bidirectional_fin_packets", "dst2src_fin_packets"),
+    # não houve alta correlação entre as variáveis de src e dst
+    # removido somente por direção
+    # mas assim como o ack, também está relacionado a coneões TCP
+    # indica finalização de conexão TCP
+    "src2dst_fin_packets",
+    "dst2src_fin_packets",
+
+    # continuar em flags tcp restantes
+
+
+}
+
+
 
 
 
@@ -122,7 +228,7 @@ TARGET_COLUMN = "label"
 def split_features(df):
     numeric_cols = df.select_dtypes(include='number').columns.tolist()
 
-    valid_cols = [col for col in df.columns if col not in DROP_COLUMNS and col != TARGET_COLUMN]
+    valid_cols = [col for col in df.columns if col not in COLUMNS_TO_IGNORE and col != TARGET_COLUMN]
 
     # categóricas incluindo as interpretadas como numéricas
     categorical = [

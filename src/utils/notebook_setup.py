@@ -1,5 +1,5 @@
 from src.configs.paths import FINAL_DATA_DIR, PROCESSED_DATA_DIR
-from src.io.io_utils import load_parquet
+from src.io.io_utils import load_parquet, save_parquet
 import pandas as pd
 import numpy as np
 

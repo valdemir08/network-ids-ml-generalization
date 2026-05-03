@@ -44,7 +44,8 @@ def mi_bar_plot(df):
 def distribution_explorer(df):
 
     feature_selector = widgets.Dropdown(
-        options=df.select_dtypes(include='number').columns.tolist(),
+        #options=df.select_dtypes(include='number').columns.tolist(),
+        options=sorted(df.select_dtypes(include='number').columns.tolist()),
         description='Feature:',
         layout=widgets.Layout(width='400px')
     )
@@ -141,12 +142,16 @@ def distribution_explorer(df):
     button.on_click(on_button_click)
 
     # display
-    display(feature_selector)
-    display(plot_type)
-    display(scale_type)
-    display(color_by_label)
-    display(bins_slider)
-    display(button)
-    display(output)
+    ui = widgets.VBox([
+        feature_selector,
+        plot_type,
+        scale_type,
+        color_by_label,
+        bins_slider,
+        button,
+        output
+    ])
+
+    display(ui)
 
     update_visibility(None)
