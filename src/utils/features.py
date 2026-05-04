@@ -2,7 +2,10 @@
 colunas que não devem ser usadas no ML, não necessitam passar por análise
 """
 
-COLUMNS_TO_IGNORE = {
+import numpy as np
+import pandas as pd
+
+columns_to_ignore = {
     # identificadores
     # expiration_id
     # nfdoc: Identifier of flow expiration trigger. Can be 0 for idle_timeout, 1 for active_timeout or -1 for custom expiration.
@@ -206,7 +209,99 @@ identical_features = {
     "src2dst_fin_packets",
     "dst2src_fin_packets",
 
-    # continuar em flags tcp restantes
+    # nenhuma remoção em tcp_flags_pairs
+    # nenhum remoção em volume_pairs
+
+    # ps_pairs
+    # remoção de direção
+
+    # incluso na lista de alta correlação
+    'src2dst_max_ps',
+    'dst2src_stddev_ps',
+    'dst2src_max_ps',
+    'dst2src_mean_ps',
+    'src2dst_stddev_ps',
+    'src2dst_mean_ps',
+    # não incluso na lista de alta correlação
+    'src2dst_min_ps',
+    'dst2src_min_ps',
+
+    # soabrando apenas {'bidirectional_mean_ps', 'bidirectional_stddev_ps', 'bidirectional_max_ps'}
+
+    # min_ps não apareceu nos pares altamente correlacionados.
+    # verificar necessidade de manter min e max ps, pois podem indicar outliers extremos
+    # talvez o desvio padrão seja o suficiente para generalizar
+
+    # média e desvio possuem MI elevado
+    # bidirectional_max_ps	MI 0.09 (elevado)
+    # bidirectional_min_ps  MI 0.02 (baixo)
+
+    # testar modelo de árvore
+    # mean
+    # mean + std
+    # mean + max
+    # mean + std + max
+    # decisão de remoção adiada
+
+
+    # testes
+    # (mean, std, max) - as 3 informações são altamente correlacionadas
+    # 'bidirectional_max_ps', -> irrelevante na seleção atual, mean e std já capturam esse comportamento
+    #
+
+
+    # ----------------------------------------------
+    # como o mínimo apresentou MI baixo, foi removido
+    "bidirectional_min_ps",
+
+    # piat_pairs
+    # PIAT = Packet Inter-Arrival Time -> tempo entre pacotes consecutivos
+    # naturalmente um tamanho mínimo pode indicar flood de pactes
+
+    # remoção de direção
+    'dst2src_max_piat_ms',
+    'src2dst_mean_piat_ms',
+    'src2dst_max_piat_ms',
+
+    # não incluso na lista de altamente correlacionados
+    'src2dst_min_piat_ms',
+    'src2dst_mean_piat_ms',
+    'src2dst_stddev_piat_ms',
+    'src2dst_max_piat_ms',
+    'dst2src_min_piat_ms',
+    'dst2src_mean_piat_ms',
+    'dst2src_stddev_piat_ms',
+    'dst2src_max_piat_ms',
+
+    #validar com os mesmos testes para packet size
+
+
+    # 'bidirectional_min_piat_ms', testado com/sem presença no modelo
+    # a remoção não alterou praticamente nada, o que indica redundancia com outras features
+    # isso também é percebido no MI
+    'bidirectional_min_piat_ms',
+
+
+
+
+
+
+    # outros de direção que sobraram e não apareceram em alta correlação
+    # acumuladores de flags
+    'src2dst_psh_packets',
+    'src2dst_rst_packets',
+    'dst2src_psh_packets',
+    'dst2src_rst_packets',
+    #bytes
+    'src2dst_bytes',
+    'dst2src_bytes',
+
+
+    # outros que apresentaram MI muito baixo
+
+    #bidirectional_urg_packets - mi : abaixo de 0.00
+
+    "bidirectional_urg_packets",
 
 
 }
@@ -222,13 +317,18 @@ CATEGORICAL_COLUMNS = {
     "ip_version",
 }
 
+
+
+columns_to_ignore.update(const_features)
+columns_to_ignore.update(identical_features)
+
 TARGET_COLUMN = "label"
 
 
 def split_features(df):
     numeric_cols = df.select_dtypes(include='number').columns.tolist()
 
-    valid_cols = [col for col in df.columns if col not in COLUMNS_TO_IGNORE and col != TARGET_COLUMN]
+    valid_cols = [col for col in df.columns if col not in columns_to_ignore and col != TARGET_COLUMN]
 
     # categóricas incluindo as interpretadas como numéricas
     categorical = [
@@ -243,3 +343,9 @@ def split_features(df):
     ]
 
     return numeric, categorical
+
+def get_columns_to_ignore():
+    return columns_to_ignore
+
+
+

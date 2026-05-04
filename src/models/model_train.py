@@ -7,18 +7,17 @@ clf = tree.DecisionTreeClassifier()
 clf = clf.fit(X, Y)
 
 """
-import sys
-
-from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
 from src.io.io_utils import load_parquet
 from src.configs.paths import FINAL_DATA_DIR
 
 from sklearn.model_selection import train_test_split
 
-from src.utils.features import split_features
+from sklearn.metrics import  classification_report, confusion_matrix
 
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import pandas as pd
+
+from src.utils.notebook_setup import load_dataset
 
 mi_features = ['bidirectional_bytes',
  'bidirectional_mean_ps',
@@ -78,8 +77,23 @@ mi_features = ['bidirectional_bytes',
  'src2dst_urg_packets',
  'dst2src_urg_packets']
 
-def decision_tree_classifier(dataset_name):
-    df = load_parquet(FINAL_DATA_DIR / "single"/f"{dataset_name}.parquet")
+features_post_analisys = [
+    'bidirectional_bytes',
+    'bidirectional_mean_ps',
+    #'bidirectional_max_ps', remoção não implicou mudanças
+    'bidirectional_stddev_ps',
+    #'bidirectional_max_piat_ms', remoção não implicou mudanças
+    'bidirectional_stddev_piat_ms',
+    'bidirectional_mean_piat_ms',
+    'bidirectional_packets',
+    'bidirectional_duration_ms',
+    'bidirectional_rst_packets',
+    'bidirectional_psh_packets',
+    'bidirectional_fin_packets',
+    'bidirectional_syn_packets',
+]
+
+def decision_tree_classifier(df):
     df = df.sample(frac=0.2, random_state=1)
 
     # evitar o waning de poucos elementos por classe
@@ -87,24 +101,56 @@ def decision_tree_classifier(dataset_name):
     valid_classes = counts[counts >= 100].index
     df = df[df["label"].isin(valid_classes)]
 
+    # tratamento da categórica protocol -> one hot
+    df = pd.get_dummies(df, columns=["protocol"])
 
+    #print([c for c in df.columns if "protocol" in c])
+    one_hot_protocol_coluns = [c for c in df.columns if "protocol" in c]
 
-    numerical, categorical = split_features(df)
+    cf_columns = [col for col in df.columns if col.startswith("cf_")]
 
-    #x = df[numerical]
     x = df[mi_features[:10]]
+    x_new = df[features_post_analisys]
+    x_proto = df[features_post_analisys + one_hot_protocol_coluns]
+    x_cf = df[features_post_analisys + cf_columns]
+
     y = df["label"]
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=1, stratify=y)
+    run_model(x, y, "Features anteriores")
+    run_model(x_new, y, "Features pós análise")
+    #run_model(x_proto, y, "Features pós análise + one_hot protocol")
+    run_model(x_cf, y, "Features pós análise + custom features")
 
-    #clf = tree.DecisionTreeClassifier(class_weight="balanced")
-    clf = RandomForestClassifier(n_estimators=100, random_state=1, n_jobs=-1, class_weight="balanced")
-    clf = clf.fit(x_train, y_train)
+def run_model(x, y, name):
+    x_train, x_test, y_train, y_test = train_test_split(
+        x, y, test_size=0.3, random_state=1, stratify=y
+    )
 
+    clf = RandomForestClassifier(
+        n_estimators=100,
+        random_state=1,
+        n_jobs=-1,
+        class_weight="balanced"
+    )
+
+    clf.fit(x_train, y_train)
     y_pred = clf.predict(x_test)
 
+    print(f"\n{name}")
     print(classification_report(y_test, y_pred))
 
+    #matriz confusão
+    labels = sorted(y_test.unique())
+    cm = confusion_matrix(y_test, y_pred, labels=labels)
+
+    cm_df = pd.DataFrame(cm, index=labels, columns=labels)
+
+    cm_df.to_csv(f"confusion_matrix_{name}.csv")
 
 if __name__ == "__main__":
-    decision_tree_classifier("cicids2017")
+    dataset_name = "cicids2017"
+    path = FINAL_DATA_DIR / "single" / f"{dataset_name}.parquet"
+
+    df = load_dataset(path=path, custom_features=True)
+
+    decision_tree_classifier(df)

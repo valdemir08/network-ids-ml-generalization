@@ -1,0 +1,11 @@
+,BENIGN,Bot,DDoS,DoS GoldenEye,DoS Hulk,DoS Slowhttptest,DoS slowloris,PortScan,Web Attack  Brute Force,Web Attack  XSS
+BENIGN,33807,9500,25748,4035,3273,4620,594,8666,12728,3684
+Bot,18,31,5,2,0,0,0,3,6,2
+DDoS,1106,92,1502,152,49,194,27,497,713,179
+DoS GoldenEye,112,6,124,59,52,45,8,33,54,17
+DoS Hulk,2094,110,1081,719,3440,469,345,401,761,176
+DoS Slowhttptest,113,7,91,29,55,55,8,41,48,17
+DoS slowloris,100,3,17,16,254,4,22,3,21,3
+PortScan,2339,293,2868,412,123,418,42,1148,1448,388
+Web Attack  Brute Force,21,0,8,2,1,4,0,5,27,5
+Web Attack  XSS,9,0,12,2,0,1,0,1,9,6
