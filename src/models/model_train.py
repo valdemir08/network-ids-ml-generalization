@@ -80,9 +80,7 @@ mi_features = ['bidirectional_bytes',
 features_post_analisys = [
     'bidirectional_bytes',
     'bidirectional_mean_ps',
-    #'bidirectional_max_ps', remoção não implicou mudanças
     'bidirectional_stddev_ps',
-    #'bidirectional_max_piat_ms', remoção não implicou mudanças
     'bidirectional_stddev_piat_ms',
     'bidirectional_mean_piat_ms',
     'bidirectional_packets',
@@ -107,21 +105,22 @@ def decision_tree_classifier(df):
     #print([c for c in df.columns if "protocol" in c])
     one_hot_protocol_coluns = [c for c in df.columns if "protocol" in c]
 
-    cf_columns = [col for col in df.columns if col.startswith("cf_")]
+    #cf_columns = [col for col in df.columns if col.startswith("cf_")]
 
     x = df[mi_features[:10]]
     x_new = df[features_post_analisys]
     x_proto = df[features_post_analisys + one_hot_protocol_coluns]
-    x_cf = df[features_post_analisys + cf_columns]
+    #x_cf = df[features_post_analisys + cf_columns]
 
     y = df["label"]
 
     run_model(x, y, "Features anteriores")
     run_model(x_new, y, "Features pós análise")
     #run_model(x_proto, y, "Features pós análise + one_hot protocol")
-    run_model(x_cf, y, "Features pós análise + custom features")
+    #run_model(x_cf, y, "Features pós análise + custom features")
 
 def run_model(x, y, name):
+    # stratify=y proporção das classes em treino e teste
     x_train, x_test, y_train, y_test = train_test_split(
         x, y, test_size=0.3, random_state=1, stratify=y
     )
@@ -151,6 +150,6 @@ if __name__ == "__main__":
     dataset_name = "cicids2017"
     path = FINAL_DATA_DIR / "single" / f"{dataset_name}.parquet"
 
-    df = load_dataset(path=path, custom_features=True)
+    df = load_dataset(path=path, custom_features=False)
 
     decision_tree_classifier(df)
