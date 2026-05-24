@@ -1,3 +1,4 @@
+# verificar se não faz mas sentido renomear para algo que lembre a união completa do dataset, e não um merge qualquer
 from src.configs.paths import PROCESSED_DATA_DIR, FINAL_DATA_DIR
 from src.io.io_utils import load_parquet, save_parquet
 import pandas as pd
