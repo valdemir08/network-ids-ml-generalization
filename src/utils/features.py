@@ -15,6 +15,12 @@ columns_to_ignore = {
     "expiration_id",
     "flow_key",
     "flow_key_rev",
+    # metadados do processo de rotulagem; não descrevem o tráfego e
+    # provocariam vazamento de informação se fossem usados como features
+    "label_binary",
+    "match_status",
+    "match_direction",
+    "match_time_diff_ms",
 
     # timestamps absolutos (totalmente relacionado ao momento de captura dos experimentos)
     "bidirectional_first_seen_ms",

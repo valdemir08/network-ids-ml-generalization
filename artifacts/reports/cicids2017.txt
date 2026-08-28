@@ -1,0 +1,23 @@
+RELATÓRIO DO DATASET cicids2017
+
+Tolerância temporal: 60.000 ms
+Fluxos extraídos/reconstruídos: 3.304.904
+Fluxos que receberam rótulo: 3.207.414
+Fluxos sem correspondência: 97.490
+Registros descartados por ambiguidade: 0
+
+Distribuição oficial:
+  BENIGN: 2.272.895 (80,30%)
+  ATTACK: 557.645 (19,70%)
+
+Distribuição reconstruída:
+  BENIGN: 2.756.158 (85,93%)
+  ATTACK: 451.256 (14,07%)
+
+Diferença entre as distribuições:
+  BENIGN: diferença de 483.263 registros; diferença de 5,63 pontos percentuais
+  ATTACK: diferença de -106.389 registros; diferença de -5,63 pontos percentuais
+
+Verificação do arquivo consolidado:
+  Registros: 3.207.414
+  Coincide com os fluxos rotulados: SIM

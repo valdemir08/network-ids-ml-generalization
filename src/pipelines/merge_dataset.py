@@ -1,37 +1,63 @@
-# verificar se não faz mas sentido renomear para algo que lembre a união completa do dataset, e não um merge qualquer
-from src.configs.paths import PROCESSED_DATA_DIR, FINAL_DATA_DIR
-from src.io.io_utils import load_parquet, save_parquet
-import pandas as pd
+import pyarrow.parquet as pq
 
+from src.configs.paths import FINAL_DATA_DIR, PROCESSED_DATA_DIR
 
 
 def merge_processed_dataset(dataset_name):
+    if dataset_name == "bot_iot":
+        pass
+        return None
+
     processed_dir = PROCESSED_DATA_DIR / dataset_name
     output_dir = FINAL_DATA_DIR / "single"
-    # mapear melhoria: todas as saídas devem criar o diretório em caso de inxistência
-    # em caso de clone, já evita erros em máquinas que não tenham os dirtórios
     output_dir.mkdir(parents=True, exist_ok=True)
-
     output_file = output_dir / f"{dataset_name}.parquet"
 
-    files = [f for f in processed_dir.iterdir()]
-    # caso seja executado antes das outras etapas (não haverá insumo para gerar o final)
+    files = sorted(
+        path
+        for path in processed_dir.rglob("*.parquet")
+        if path.is_file()
+    )
     if not files:
         raise ValueError(f"Nenhum arquivo encontrado em {processed_dir}")
 
-    dfs = []
+    temporary_output = output_file.with_suffix(".parquet.tmp")
+    writer = None
+    expected_schema = None
+    source_row_count = 0
 
-    for file in files:
-        df = load_parquet(file)
-        dfs.append(df)
+    try:
+        for file in files:
+            table = pq.read_table(file)
+            if expected_schema is None:
+                expected_schema = table.schema
+                writer = pq.ParquetWriter(temporary_output, expected_schema)
+            elif table.schema != expected_schema:
+                raise ValueError(f"Esquema incompatível em {file}")
 
-    df_final = pd.concat(dfs, ignore_index=True)
-    save_parquet(df_final, output_file)
+            writer.write_table(table)
+            source_row_count += table.num_rows
+    finally:
+        if writer is not None:
+            writer.close()
+
+    final_row_count = pq.ParquetFile(temporary_output).metadata.num_rows
+    if final_row_count != source_row_count:
+        raise ValueError(
+            "A contagem do arquivo unificado difere da soma dos arquivos de origem"
+        )
+
+    temporary_output.replace(output_file)
+    print(f"Salvo em {output_file}")
+    print(f"Arquivos unificados: {len(files)}")
+    print(f"Registros unificados: {final_row_count}")
+    return output_file
+
 
 def merge_datasets(dataset_names: list[str], output_name: str):
-    # verificar necessidade de passar output_name como parâmetro
-    # lembrar que alguns datasets tem nomes parecidos ex: cicids2017 ... 2018
+    # A união de datasets diferentes será definida após a validação dos três.
     pass
+
 
 if __name__ == "__main__":
     merge_processed_dataset("cicids2017")

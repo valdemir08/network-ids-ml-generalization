@@ -1,0 +1,24 @@
+RELATÓRIO DO DATASET unsw_nb15
+
+Tolerância temporal: 60.000 ms
+Fluxos extraídos/reconstruídos: 2.082.628
+Fluxos que receberam rótulo: 2.082.628
+Fluxos sem correspondência de ataque: 2.013.048
+Registros descartados por ambiguidade: 0
+  Esses fluxos foram rotulados como BENIGN por exclusão.
+
+Distribuição oficial:
+  BENIGN: 2.218.761 (87,35%)
+  ATTACK: 321.283 (12,65%)
+
+Distribuição reconstruída:
+  BENIGN: 2.013.048 (96,66%)
+  ATTACK: 69.580 (3,34%)
+
+Diferença entre as distribuições:
+  BENIGN: diferença de -205.713 registros; diferença de 9,31 pontos percentuais
+  ATTACK: diferença de -251.703 registros; diferença de -9,31 pontos percentuais
+
+Verificação do arquivo consolidado:
+  Registros: 2.082.628
+  Coincide com os fluxos rotulados: SIM
