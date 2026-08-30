@@ -456,6 +456,351 @@ def match_flows_simple(flows, labels, time_tolerance):
     return match_table.reset_index()
 
 
+def _prepare_interval_groups(labels):
+    """Agrupa intervalos por chave para evitar um produto cartesiano."""
+    work = labels[
+        ["flow_key", "ts_ms", "last_ts_ms", "label"]
+    ].copy()
+    work["ts_ms"] = pd.to_numeric(work["ts_ms"], errors="coerce")
+    work["last_ts_ms"] = pd.to_numeric(
+        work["last_ts_ms"],
+        errors="coerce",
+    )
+    valid = work[
+        work[["flow_key", "ts_ms", "last_ts_ms", "label"]]
+        .notna()
+        .all(axis=1)
+    ].copy()
+    valid = valid[valid["last_ts_ms"] >= valid["ts_ms"]]
+    if valid.empty:
+        return {}, {}
+
+    valid["flow_key"] = valid["flow_key"].astype(str)
+    valid["ts_ms"] = valid["ts_ms"].astype("int64")
+    valid["last_ts_ms"] = valid["last_ts_ms"].astype("int64")
+
+    label_names = sorted(valid["label"].astype(str).unique())
+    label_to_code = {
+        label: code for code, label in enumerate(label_names, start=1)
+    }
+    valid["_label_code"] = (
+        valid["label"].astype(str).map(label_to_code).astype("int32")
+    )
+
+    groups = {}
+    valid = valid.sort_values(["flow_key", "ts_ms"], kind="stable")
+    for key, group in valid.groupby("flow_key", sort=False):
+        starts = group["ts_ms"].to_numpy(dtype=np.int64)
+        ends = group["last_ts_ms"].to_numpy(dtype=np.int64)
+        codes = group["_label_code"].to_numpy(dtype=np.int32)
+        maximum_duration = int(np.max(ends - starts))
+        groups[key] = (starts, ends, codes, maximum_duration)
+
+    code_to_label = {code: label for label, code in label_to_code.items()}
+    return groups, code_to_label
+
+
+def _resolve_interval_direction(
+    flow_keys,
+    flow_starts,
+    flow_ends,
+    label_groups,
+    time_tolerance,
+    row_ids,
+):
+    """Resolve uma direção pela sobreposição dos intervalos."""
+    codes = np.zeros(len(flow_keys), dtype=np.int32)
+    differences = np.full(len(flow_keys), np.nan)
+
+    for row_id in row_ids:
+        group = label_groups.get(str(flow_keys[row_id]))
+        if group is None:
+            continue
+
+        label_starts, label_ends, label_codes, maximum_duration = group
+        flow_start = int(flow_starts[row_id])
+        flow_end = int(flow_ends[row_id])
+
+        left = np.searchsorted(
+            label_starts,
+            flow_start - time_tolerance - maximum_duration,
+            side="left",
+        )
+        right = np.searchsorted(
+            label_starts,
+            flow_end + time_tolerance,
+            side="right",
+        )
+        if left == right:
+            continue
+
+        starts = label_starts[left:right]
+        ends = label_ends[left:right]
+        possible = ends >= flow_start - time_tolerance
+        if not possible.any():
+            continue
+
+        starts = starts[possible]
+        ends = ends[possible]
+        candidate_codes = label_codes[left:right][possible]
+        gaps = np.maximum(
+            np.maximum(starts - flow_end, flow_start - ends),
+            0,
+        )
+        inside = gaps <= time_tolerance
+        if not inside.any():
+            continue
+
+        unique_codes = np.unique(candidate_codes[inside])
+        codes[row_id] = unique_codes[0] if len(unique_codes) == 1 else -1
+        differences[row_id] = float(gaps[inside].min())
+
+    return codes, differences
+
+
+def match_flows_by_interval_simple(flows, labels, time_tolerance):
+    """Encontra rótulos pela 5-tupla e sobreposição temporal."""
+    _validate_columns(
+        flows,
+        [
+            "flow_key",
+            "flow_key_rev",
+            "bidirectional_first_seen_ms",
+            "bidirectional_last_seen_ms",
+        ],
+        "flows",
+    )
+    _validate_columns(
+        labels,
+        ["flow_key", "ts_ms", "last_ts_ms", "label"],
+        "labels",
+    )
+    if time_tolerance < 0:
+        raise ValueError("time_tolerance deve ser maior ou igual a zero")
+
+    flow_starts = pd.to_numeric(
+        flows["bidirectional_first_seen_ms"],
+        errors="coerce",
+    )
+    flow_ends = pd.to_numeric(
+        flows["bidirectional_last_seen_ms"],
+        errors="coerce",
+    )
+    valid = (
+        flows[["flow_key", "flow_key_rev"]].notna().all(axis=1)
+        & flow_starts.notna()
+        & flow_ends.notna()
+        & flow_ends.ge(flow_starts)
+    ).to_numpy()
+
+    flow_keys = flows["flow_key"].astype("string").to_numpy()
+    reverse_keys = flows["flow_key_rev"].astype("string").to_numpy()
+    starts = flow_starts.fillna(0).to_numpy(dtype=np.int64)
+    ends = flow_ends.fillna(0).to_numpy(dtype=np.int64)
+    label_groups, code_to_label = _prepare_interval_groups(labels)
+
+    valid_rows = np.flatnonzero(valid)
+    codes, differences = _resolve_interval_direction(
+        flow_keys,
+        starts,
+        ends,
+        label_groups,
+        time_tolerance,
+        valid_rows,
+    )
+    directions = np.full(len(flows), None, dtype=object)
+    directions[codes != 0] = "direct"
+
+    reverse_rows = np.flatnonzero(valid & (codes == 0))
+    reverse_codes, reverse_differences = _resolve_interval_direction(
+        reverse_keys,
+        starts,
+        ends,
+        label_groups,
+        time_tolerance,
+        reverse_rows,
+    )
+    use_reverse = reverse_codes != 0
+    codes[use_reverse] = reverse_codes[use_reverse]
+    differences[use_reverse] = reverse_differences[use_reverse]
+    directions[use_reverse] = "reverse"
+
+    result = pd.DataFrame({"_flow_row_id": np.arange(len(flows))})
+    result["label"] = pd.NA
+    result["match_status"] = "invalid_key_or_time"
+    result["match_direction"] = directions
+    result["match_time_diff_ms"] = differences
+    result.loc[valid, "match_status"] = "unmatched"
+
+    matched = codes > 0
+    for code, label in code_to_label.items():
+        result.loc[codes == code, "label"] = label
+    result.loc[matched, "match_status"] = "matched_interval"
+    result.loc[codes < 0, "match_status"] = "ambiguous_interval_labels"
+    return result
+
+
+def _match_any_interval_one_direction(
+    flows,
+    labels,
+    flow_key_column,
+    time_tolerance,
+    direction,
+):
+    """Localiza qualquer intervalo compatível quando há uma única classe."""
+    if flows.empty or labels.empty:
+        return _empty_match_result()
+
+    flow_work = flows[
+        [
+            "_flow_row_id",
+            flow_key_column,
+            "bidirectional_first_seen_ms",
+            "bidirectional_last_seen_ms",
+        ]
+    ].rename(
+        columns={
+            flow_key_column: "_match_key",
+            "bidirectional_first_seen_ms": "_flow_start_ms",
+            "bidirectional_last_seen_ms": "_flow_end_ms",
+        }
+    )
+    label_work = labels[
+        ["flow_key", "ts_ms", "last_ts_ms"]
+    ].rename(
+        columns={
+            "flow_key": "_match_key",
+            "ts_ms": "_label_start_ms",
+            "last_ts_ms": "_label_end_ms",
+        }
+    )
+
+    flow_work["_query_end_ms"] = (
+        flow_work["_flow_end_ms"] + time_tolerance
+    )
+    label_work = label_work.sort_values(
+        ["_match_key", "_label_start_ms"],
+        kind="stable",
+    )
+    label_work["_maximum_end_ms"] = label_work.groupby(
+        "_match_key",
+        sort=False,
+    )["_label_end_ms"].cummax()
+
+    matched = pd.merge_asof(
+        flow_work.sort_values("_query_end_ms"),
+        label_work.sort_values("_label_start_ms"),
+        left_on="_query_end_ms",
+        right_on="_label_start_ms",
+        by="_match_key",
+        direction="backward",
+    )
+    overlaps = matched["_maximum_end_ms"].ge(
+        matched["_flow_start_ms"] - time_tolerance
+    )
+    matched = matched[overlaps].copy()
+    if matched.empty:
+        return _empty_match_result()
+
+    matched["label"] = "BENIGN"
+    matched["match_status"] = "matched_interval"
+    matched["match_direction"] = direction
+    matched["match_time_diff_ms"] = np.nan
+    return matched[["_flow_row_id", *MATCH_RESULT_COLUMNS]]
+
+
+def match_any_interval_simple(flows, labels, time_tolerance):
+    """Marca fluxos que sobrepõem ao menos um intervalo de uma única classe."""
+    _validate_columns(
+        flows,
+        [
+            "flow_key",
+            "flow_key_rev",
+            "bidirectional_first_seen_ms",
+            "bidirectional_last_seen_ms",
+        ],
+        "flows",
+    )
+    _validate_columns(
+        labels,
+        ["flow_key", "ts_ms", "last_ts_ms"],
+        "labels",
+    )
+
+    flows_work = flows[
+        [
+            "flow_key",
+            "flow_key_rev",
+            "bidirectional_first_seen_ms",
+            "bidirectional_last_seen_ms",
+        ]
+    ].copy()
+    flows_work.insert(0, "_flow_row_id", np.arange(len(flows_work)))
+    for column in ["bidirectional_first_seen_ms", "bidirectional_last_seen_ms"]:
+        flows_work[column] = pd.to_numeric(flows_work[column], errors="coerce")
+
+    labels_work = labels[["flow_key", "ts_ms", "last_ts_ms"]].copy()
+    for column in ["ts_ms", "last_ts_ms"]:
+        labels_work[column] = pd.to_numeric(labels_work[column], errors="coerce")
+
+    valid_flows = flows_work[
+        flows_work[
+            [
+                "flow_key",
+                "flow_key_rev",
+                "bidirectional_first_seen_ms",
+                "bidirectional_last_seen_ms",
+            ]
+        ].notna().all(axis=1)
+        & flows_work["bidirectional_last_seen_ms"].ge(
+            flows_work["bidirectional_first_seen_ms"]
+        )
+    ].copy()
+    valid_labels = labels_work[
+        labels_work[["flow_key", "ts_ms", "last_ts_ms"]]
+        .notna()
+        .all(axis=1)
+        & labels_work["last_ts_ms"].ge(labels_work["ts_ms"])
+    ].copy()
+    for column in ["flow_key", "flow_key_rev"]:
+        valid_flows[column] = valid_flows[column].astype(str)
+    for column in ["bidirectional_first_seen_ms", "bidirectional_last_seen_ms"]:
+        valid_flows[column] = valid_flows[column].astype("int64")
+    valid_labels["flow_key"] = valid_labels["flow_key"].astype(str)
+    for column in ["ts_ms", "last_ts_ms"]:
+        valid_labels[column] = valid_labels[column].astype("int64")
+
+    result = pd.DataFrame({"_flow_row_id": np.arange(len(flows))})
+    result["label"] = pd.NA
+    result["match_status"] = "invalid_key_or_time"
+    result["match_direction"] = pd.NA
+    result["match_time_diff_ms"] = np.nan
+    result.loc[valid_flows["_flow_row_id"], "match_status"] = "unmatched"
+
+    direct = _match_any_interval_one_direction(
+        valid_flows,
+        valid_labels,
+        "flow_key",
+        time_tolerance,
+        "direct",
+    )
+    result = result.set_index("_flow_row_id")
+    _apply_match_results(result, direct)
+    reverse_ids = result.index[result["match_status"].eq("unmatched")]
+    reverse_flows = valid_flows[
+        valid_flows["_flow_row_id"].isin(reverse_ids)
+    ]
+    reverse = _match_any_interval_one_direction(
+        reverse_flows,
+        valid_labels,
+        "flow_key_rev",
+        time_tolerance,
+        "reverse",
+    )
+    _apply_match_results(result, reverse)
+    return result.reset_index()
+
+
 def create_binary_label(label_series, benign_label="BENIGN"):
     """Converte rótulos válidos em BENIGN/ATTACK sem alterar o original."""
     labels_as_string = label_series.astype("string").str.strip()
@@ -487,132 +832,224 @@ def match_flows(flows, labels, time_tolerance):
     return result
 
 
-def match_unsw_flows(flows, labels, time_tolerance):
-    """
-    Aplica a política de ataques-primeiro usada na reconstrução do UNSW-NB15.
+def _split_labels(labels):
+    normalized = labels["label"].astype("string").str.strip().str.upper()
+    benign = normalized.eq("BENIGN")
+    return labels[~benign & normalized.notna()].copy(), labels[benign].copy()
 
-    O ground truth original é exaustivo para os períodos selecionados. Assim,
-    fluxos tecnicamente válidos sem ataque temporalmente compatível são
-    classificados como benignos por exclusão. Divergências entre categorias de
-    ataque permanecem explícitas, mas continuam sendo ataques na coluna binária.
 
-    A 5-tupla é sempre a regra principal. Um segundo passo é aplicado apenas aos
-    registros oficiais ``unas`` e ``ib``, que não contêm um número de protocolo
-    mapeável. Nesses casos, IPs, portas e tempo são usados como fallback e o
-    status registra explicitamente que o protocolo não participou do match.
-    """
-    attack_labels = labels[labels["label"].ne("BENIGN")].copy()
-    result = match_flows(flows, attack_labels, time_tolerance)
-
-    strict_ambiguous_attack = result["match_status"].str.startswith(
-        "ambiguous",
-        na=False,
-    )
-    result.loc[strict_ambiguous_attack, "label"] = "ATTACK_AMBIGUOUS"
-    result.loc[strict_ambiguous_attack, "label_binary"] = "ATTACK"
-
-    can_use_protocol_fallback = {
+def _apply_unsw_protocol_fallback(
+    attack_matches,
+    flows,
+    attack_labels,
+    time_tolerance,
+):
+    """Testa ataques ``unas``/``ib`` sem transformar conflitos em rótulos."""
+    required = {
         "protocol_name",
         "src_ip",
         "dst_ip",
         "src_port",
         "dst_port",
         "ts_ms",
+        "last_ts_ms",
         "label",
-    }.issubset(labels.columns)
-    unmatched_mask = result["match_status"].eq("unmatched")
+    }
+    if not required.issubset(attack_labels.columns):
+        return attack_matches
 
-    if can_use_protocol_fallback and unmatched_mask.any():
-        protocol_names = (
-            labels["protocol_name"].astype("string").str.strip().str.lower()
+    protocol_names = (
+        attack_labels["protocol_name"].astype("string").str.strip().str.lower()
+    )
+    wildcard_labels = attack_labels[
+        protocol_names.isin(UNSW_PROTOCOL_WILDCARD_NAMES)
+    ].copy()
+    unmatched_rows = np.flatnonzero(
+        attack_matches["match_status"].eq("unmatched").to_numpy()
+    )
+    if wildcard_labels.empty or len(unmatched_rows) == 0:
+        return attack_matches
+
+    wildcard_flows = flows.iloc[unmatched_rows][
+        [
+            "src_ip",
+            "dst_ip",
+            "src_port",
+            "dst_port",
+            "bidirectional_first_seen_ms",
+            "bidirectional_last_seen_ms",
+        ]
+    ].copy()
+    wildcard_flows = create_protocol_wildcard_keys(wildcard_flows)
+    wildcard_labels = create_protocol_wildcard_keys(wildcard_labels)
+    wildcard_matches = match_flows_by_interval_simple(
+        wildcard_flows,
+        wildcard_labels,
+        time_tolerance,
+    )
+
+    has_candidate = ~wildcard_matches["match_status"].isin(
+        ["unmatched", "invalid_key_or_time"]
+    )
+    if not has_candidate.any():
+        return attack_matches
+
+    local_rows = wildcard_matches.loc[
+        has_candidate, "_flow_row_id"
+    ].to_numpy(dtype=np.int64)
+    target_rows = unmatched_rows[local_rows]
+    selected = wildcard_matches.loc[has_candidate].copy()
+    selected["match_status"] = selected["match_status"].replace(
+        {
+            "matched_interval": "matched_protocol_wildcard_interval",
+            "ambiguous_interval_labels": (
+                "ambiguous_protocol_wildcard_interval_labels"
+            ),
+        }
+    )
+    for column in MATCH_RESULT_COLUMNS:
+        attack_matches.loc[target_rows, column] = selected[column].to_numpy()
+    return attack_matches
+
+
+def _finish_attacks_first(
+    flows,
+    attack_matches,
+    benign_labels,
+    benign_matcher,
+    time_tolerance,
+):
+    """Mantém somente ataques e benignos com correspondência positiva."""
+    labels = attack_matches["label"].astype("object").to_numpy(copy=True)
+    statuses = attack_matches["match_status"].astype("object").to_numpy(copy=True)
+    directions = (
+        attack_matches["match_direction"].astype("object").to_numpy(copy=True)
+    )
+    differences = attack_matches["match_time_diff_ms"].to_numpy(
+        dtype="float64",
+        na_value=np.nan,
+    ).copy()
+    binary_labels = np.full(len(flows), pd.NA, dtype=object)
+
+    accepted_attacks = ~pd.isna(labels)
+    wildcard_attacks = accepted_attacks & pd.Series(statuses).str.startswith(
+        "matched_protocol_wildcard",
+        na=False,
+    ).to_numpy()
+    statuses[accepted_attacks] = "attack_matched"
+    statuses[wildcard_attacks] = "attack_matched_protocol_wildcard"
+    binary_labels[accepted_attacks] = "ATTACK"
+
+    remaining_rows = np.flatnonzero(statuses == "unmatched")
+    if len(remaining_rows):
+        print(
+            "\nEtapa 2/2: procurando correspondências benignas "
+            f"explícitas entre {len(remaining_rows)} fluxos sem ataque..."
         )
-        wildcard_labels = labels.loc[
-            labels["label"].ne("BENIGN")
-            & protocol_names.isin(UNSW_PROTOCOL_WILDCARD_NAMES),
-            [
-                "src_ip",
-                "dst_ip",
-                "src_port",
-                "dst_port",
-                "ts_ms",
-                "label",
-            ],
-        ].copy()
+        benign_matches = benign_matcher(
+            flows.iloc[remaining_rows],
+            benign_labels,
+            time_tolerance,
+        )
+        accepted_benign = benign_matches["label"].notna().to_numpy()
+        local_rows = benign_matches["_flow_row_id"].to_numpy(dtype=np.int64)
+        benign_rows = remaining_rows[local_rows[accepted_benign]]
 
-        if not wildcard_labels.empty:
-            wildcard_flows = flows.loc[
-                unmatched_mask,
-                [
-                    "src_ip",
-                    "dst_ip",
-                    "src_port",
-                    "dst_port",
-                    "bidirectional_first_seen_ms",
-                ],
-            ].copy()
-            wildcard_flows = create_protocol_wildcard_keys(wildcard_flows)
-            wildcard_labels = create_protocol_wildcard_keys(wildcard_labels)
+        labels[benign_rows] = "BENIGN"
+        binary_labels[benign_rows] = "BENIGN"
+        statuses[benign_rows] = "benign_matched"
+        directions[benign_rows] = benign_matches.loc[
+            accepted_benign, "match_direction"
+        ].to_numpy()
+        differences[benign_rows] = benign_matches.loc[
+            accepted_benign, "match_time_diff_ms"
+        ].to_numpy(dtype="float64", na_value=np.nan)
 
-            wildcard_result = match_flows(
-                wildcard_flows,
-                wildcard_labels,
-                time_tolerance,
-            )
-            wildcard_ambiguous = wildcard_result[
-                "match_status"
-            ].str.startswith("ambiguous", na=False)
-            wildcard_attack = wildcard_result["label"].notna() | wildcard_ambiguous
+        ambiguous_benign = benign_matches["match_status"].str.startswith(
+            "ambiguous",
+            na=False,
+        ).to_numpy()
+        if ambiguous_benign.any():
+            ambiguous_rows = remaining_rows[local_rows[ambiguous_benign]]
+            statuses[ambiguous_rows] = "ambiguous_benign"
 
-            if wildcard_attack.any():
-                wildcard_rows = wildcard_result.index[wildcard_attack]
-                wildcard_labels_result = wildcard_result.loc[
-                    wildcard_rows, "label"
-                ].astype("string")
-                wildcard_labels_result.loc[
-                    wildcard_ambiguous.loc[wildcard_rows]
-                ] = "ATTACK_AMBIGUOUS"
-
-                status_prefix = {
-                    "matched_unique": "matched_protocol_wildcard_unique",
-                    "matched_nearest": "matched_protocol_wildcard_nearest",
-                    "ambiguous_nearest_tie": (
-                        "ambiguous_protocol_wildcard_nearest_tie"
-                    ),
-                    "ambiguous_timestamp_labels": (
-                        "ambiguous_protocol_wildcard_timestamp_labels"
-                    ),
-                }
-                result.loc[wildcard_rows, "label"] = (
-                    wildcard_labels_result.to_numpy()
-                )
-                result.loc[wildcard_rows, "label_binary"] = "ATTACK"
-                result.loc[wildcard_rows, "match_status"] = (
-                    wildcard_result.loc[wildcard_rows, "match_status"]
-                    .map(status_prefix)
-                    .to_numpy()
-                )
-                result.loc[wildcard_rows, "match_direction"] = (
-                    wildcard_result.loc[wildcard_rows, "match_direction"]
-                    .to_numpy()
-                )
-                result.loc[wildcard_rows, "match_time_diff_ms"] = (
-                    wildcard_result.loc[wildcard_rows, "match_time_diff_ms"]
-                    .to_numpy()
-                )
-
-    benign_by_exclusion = result["match_status"].eq("unmatched")
-    result.loc[benign_by_exclusion, "label"] = "BENIGN"
-    result.loc[benign_by_exclusion, "label_binary"] = "BENIGN"
-    result.loc[benign_by_exclusion, "match_status"] = "benign_by_exclusion"
+    result = flows.copy()
+    result["label"] = labels
+    result["match_status"] = statuses
+    result["match_direction"] = directions
+    result["match_time_diff_ms"] = differences
+    result["label_binary"] = binary_labels
     return result
+
+
+def match_cic_flows(flows, labels, time_tolerance):
+    """Aplica ataques-primeiro ao CICIDS2017 com proximidade dos inícios."""
+    attack_labels, benign_labels = _split_labels(labels)
+    print("\nEtapa 1/2: procurando correspondências de ataque...")
+    attack_matches = match_flows_simple(
+        flows,
+        attack_labels,
+        time_tolerance,
+    )
+    return _finish_attacks_first(
+        flows,
+        attack_matches,
+        benign_labels,
+        match_flows_simple,
+        time_tolerance,
+    )
+
+
+def match_unsw_flows(flows, labels, time_tolerance):
+    """Aplica ataques-primeiro ao UNSW-NB15 usando intervalos completos."""
+    attack_labels, benign_labels = _split_labels(labels)
+    print("\nEtapa 1/2: procurando correspondências de ataque...")
+    attack_matches = match_flows_by_interval_simple(
+        flows,
+        attack_labels,
+        time_tolerance,
+    )
+    attack_matches = _apply_unsw_protocol_fallback(
+        attack_matches,
+        flows,
+        attack_labels,
+        time_tolerance,
+    )
+    return _finish_attacks_first(
+        flows,
+        attack_matches,
+        benign_labels,
+        match_any_interval_simple,
+        time_tolerance,
+    )
+
+
+def match_iot23_flows(flows, labels, time_tolerance):
+    """Aplica ataques-primeiro ao IoT-23 usando intervalos completos."""
+    attack_labels, benign_labels = _split_labels(labels)
+    print("\nEtapa 1/2: procurando correspondências de ataque...")
+    attack_matches = match_flows_by_interval_simple(
+        flows,
+        attack_labels,
+        time_tolerance,
+    )
+    return _finish_attacks_first(
+        flows,
+        attack_matches,
+        benign_labels,
+        match_any_interval_simple,
+        time_tolerance,
+    )
 
 
 def match_flows_for_dataset(dataset_name, flows, labels, time_tolerance):
     """Seleciona, em uma camada única, a política de matching do dataset."""
     if dataset_name == "cicids2017":
-        return match_flows(flows, labels, time_tolerance)
+        return match_cic_flows(flows, labels, time_tolerance)
     elif dataset_name == "unsw_nb15":
         return match_unsw_flows(flows, labels, time_tolerance)
+    elif dataset_name == "iot23":
+        return match_iot23_flows(flows, labels, time_tolerance)
     elif dataset_name == "bot_iot":
         pass
     else:

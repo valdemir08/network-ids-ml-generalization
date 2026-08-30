@@ -1,7 +1,10 @@
 import re
+from collections import Counter
 
 import dpkt.ip
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 from src.configs.column_mappings import (
     CICIDS_MAPPING,
@@ -22,6 +25,38 @@ from src.io.io_utils import save_parquet
 
 
 UNSW_READ_CHUNK_SIZE = 250_000
+IOT23_READ_CHUNK_SIZE = 250_000
+
+IOT23_ZEEK_COLUMNS = [
+    "ts",
+    "uid",
+    "src_ip",
+    "src_port",
+    "dst_ip",
+    "dst_port",
+    "protocol_name",
+    "service",
+    "duration",
+    "orig_bytes",
+    "resp_bytes",
+    "conn_state",
+    "local_orig",
+    "local_resp",
+    "missed_bytes",
+    "history",
+    "orig_pkts",
+    "orig_ip_bytes",
+    "resp_pkts",
+    "resp_ip_bytes",
+    "tunnel_and_labels",
+]
+
+IOT23_PROTOCOL_MAPPING = {
+    "icmp": 1,
+    "tcp": 6,
+    "udp": 17,
+    "icmp6": 58,
+}
 
 
 def read_csv_safe(path):
@@ -143,7 +178,7 @@ def _scenario_flow_files(dataset_name, scenario):
 
     if output_mode == "scenario":
         files = [dataset_dir / f"{scenario}_flows.parquet"]
-    elif output_mode == "per_pcap":
+    elif output_mode in {"per_pcap", "chunked"}:
         files = sorted(
             (dataset_dir / scenario).glob("*_flows.parquet"),
             key=lambda path: int(path.stem.split("_")[0]),
@@ -354,6 +389,146 @@ def _prepare_unsw_labels(dataset_name, scenario):
     return output_path
 
 
+def _prepare_iot23_chunk(raw):
+    label_parts = raw["tunnel_and_labels"].str.extract(
+        r"^(.*?)\s{3,}((?i:benign|malicious))\s{3,}(\S+)$"
+    )
+    invalid_labels = label_parts.isna().any(axis=1)
+    if invalid_labels.any():
+        raise ValueError(
+            "Formato de rótulo inválido em "
+            f"{int(invalid_labels.sum())} registros do IoT-23"
+        )
+
+    protocol_names = raw["protocol_name"].astype("string").str.strip()
+    protocols = protocol_names.map(IOT23_PROTOCOL_MAPPING).astype("Int64")
+    if protocols.isna().any():
+        unknown = sorted(protocol_names[protocols.isna()].unique())
+        raise ValueError(f"Protocolos IoT-23 desconhecidos: {unknown}")
+
+    start_ms = (
+        pd.to_numeric(raw["ts"], errors="coerce") * 1_000
+    ).round().astype("Int64")
+    duration_ms = (
+        pd.to_numeric(
+            raw["duration"].replace({"-": "0", "(empty)": "0"}),
+            errors="coerce",
+        )
+        * 1_000
+    ).round().astype("Int64")
+
+    broad_label = label_parts[1].astype("string").str.capitalize()
+    detailed_label = label_parts[2].astype("string")
+    attack_label = detailed_label.mask(
+        detailed_label.isin(["-", "(empty)"]),
+        "Malicious",
+    )
+
+    labels = pd.DataFrame(
+        {
+            "src_ip": raw["src_ip"].astype("string").str.strip(),
+            "dst_ip": raw["dst_ip"].astype("string").str.strip(),
+            "src_port": pd.to_numeric(
+                raw["src_port"], errors="coerce"
+            ).astype("Int64"),
+            "dst_port": pd.to_numeric(
+                raw["dst_port"], errors="coerce"
+            ).astype("Int64"),
+            "protocol": protocols,
+            "ts_ms": start_ms,
+            "last_ts_ms": start_ms + duration_ms,
+            "label": attack_label.mask(broad_label.eq("Benign"), "BENIGN"),
+            "label_binary_source": broad_label.map(
+                {"Benign": "BENIGN", "Malicious": "ATTACK"}
+            ).astype("string"),
+            "protocol_name": protocol_names,
+        }
+    )
+
+    invalid_key_or_time = labels[
+        [
+            "src_ip",
+            "dst_ip",
+            "src_port",
+            "dst_port",
+            "protocol",
+            "ts_ms",
+            "last_ts_ms",
+        ]
+    ].isna().any(axis=1)
+    if invalid_key_or_time.any():
+        raise ValueError(
+            "Chave ou tempo inválido em "
+            f"{int(invalid_key_or_time.sum())} registros do IoT-23"
+        )
+    return labels
+
+
+def _prepare_iot23_labels(dataset_name, scenario):
+    dataset_cfg = DATASETS[dataset_name]
+    scenario_cfg = dataset_cfg["scenarios"][scenario]
+    label_dir = dataset_cfg["root"] / dataset_cfg["label_dir"]
+    output_path = (
+        INTERMEDIATE_DATA_DIR / dataset_name / f"{scenario}_labels.parquet"
+    )
+    temporary_path = output_path.with_suffix(".parquet.tmp")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    writer = None
+    total = 0
+    source_counts = Counter()
+
+    try:
+        for label_file in scenario_cfg["labels"]:
+            path = label_dir / label_file
+            print("Carregando em blocos:", path)
+            chunks = pd.read_csv(
+                path,
+                sep="\t",
+                comment="#",
+                header=None,
+                names=IOT23_ZEEK_COLUMNS,
+                usecols=[
+                    "ts",
+                    "src_ip",
+                    "src_port",
+                    "dst_ip",
+                    "dst_port",
+                    "protocol_name",
+                    "duration",
+                    "tunnel_and_labels",
+                ],
+                dtype=str,
+                na_filter=False,
+                chunksize=IOT23_READ_CHUNK_SIZE,
+            )
+
+            for raw in chunks:
+                labels = _prepare_iot23_chunk(raw)
+                source_counts.update(labels["label_binary_source"])
+                table = pa.Table.from_pandas(labels, preserve_index=False)
+                if writer is None:
+                    writer = pq.ParquetWriter(
+                        temporary_path,
+                        table.schema,
+                        compression="snappy",
+                    )
+                writer.write_table(table)
+                total += len(labels)
+    finally:
+        if writer is not None:
+            writer.close()
+
+    if total == 0:
+        raise ValueError(f"Nenhum rótulo encontrado para {scenario}")
+
+    temporary_path.replace(output_path)
+    print(f"Registros preparados: {total}")
+    print(f"Distribuição binária: {dict(source_counts)}")
+    print(f"Salvo em {output_path}")
+    return output_path
+
+
 def prepare_labels(dataset_name, scenario):
     print(f"Preparando labels para {dataset_name} {scenario}")
 
@@ -361,6 +536,8 @@ def prepare_labels(dataset_name, scenario):
         return _prepare_cicids_labels(dataset_name, scenario)
     elif dataset_name == "unsw_nb15":
         return _prepare_unsw_labels(dataset_name, scenario)
+    elif dataset_name == "iot23":
+        return _prepare_iot23_labels(dataset_name, scenario)
     elif dataset_name == "bot_iot":
         pass
     else:

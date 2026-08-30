@@ -1,5 +1,6 @@
 import pyarrow.parquet as pq
 
+from src.configs.datasets import DATASETS
 from src.configs.paths import FINAL_DATA_DIR, PROCESSED_DATA_DIR
 
 
@@ -18,6 +19,8 @@ def merge_processed_dataset(dataset_name):
         for path in processed_dir.rglob("*.parquet")
         if path.is_file()
     )
+    if DATASETS[dataset_name].get("flow_output_mode") == "chunked":
+        files = [path for path in files if path.parent != processed_dir]
     if not files:
         raise ValueError(f"Nenhum arquivo encontrado em {processed_dir}")
 

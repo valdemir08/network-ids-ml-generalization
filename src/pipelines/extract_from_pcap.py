@@ -1,4 +1,7 @@
-from src.flows.flow_builder import build_flows_from_pcap
+from src.flows.flow_builder import (
+    build_flows_from_pcap,
+    iter_flow_chunks_from_pcap,
+)
 from src.configs.datasets import DATASETS
 from src.configs.paths import INTERMEDIATE_DATA_DIR
 
@@ -21,6 +24,30 @@ def get_flow_output_path(dataset_name, scenario, pcap_path):
     return output_file
 
 
+def _extract_pcap_in_chunks(dataset_name, scenario, pcap_path, chunk_size):
+    output_dir = INTERMEDIATE_DATA_DIR / dataset_name / scenario
+    output_dir.mkdir(parents=True, exist_ok=True)
+    total_flows = 0
+    output_files = []
+
+    for chunk_number, flows in enumerate(
+        iter_flow_chunks_from_pcap(pcap_path, chunk_size),
+        start=1,
+    ):
+        output_file = output_dir / f"{chunk_number:06d}_flows.parquet"
+        flows.to_parquet(output_file, index=False)
+        total_flows += len(flows)
+        output_files.append(output_file)
+        print(
+            f"Bloco {chunk_number}: {len(flows)} fluxos; "
+            f"total {total_flows}"
+        )
+
+    if not output_files:
+        raise ValueError(f"Nenhum fluxo extraído de {pcap_path}")
+    return output_files
+
+
 def get_pcaps_to_process(scenario_cfg, selected_pcap=None):
     pcaps = scenario_cfg["pcaps"]
 
@@ -33,7 +60,12 @@ def get_pcaps_to_process(scenario_cfg, selected_pcap=None):
     return [selected_pcap]
 
 
-def extract_from_pcap(dataset_name, scenario, selected_pcap=None):
+def extract_from_pcap(
+    dataset_name,
+    scenario,
+    selected_pcap=None,
+    chunk_size=None,
+):
     print(f"Extraindo flows do pcap para {dataset_name} {scenario}")
 
     dataset = DATASETS[dataset_name]
@@ -42,6 +74,7 @@ def extract_from_pcap(dataset_name, scenario, selected_pcap=None):
     pcap_dir = root / dataset["pcap_dir"]
 
     scenario_cfg = dataset["scenarios"][scenario]
+    output_mode = dataset.get("flow_output_mode", "scenario")
     pcaps_to_process = get_pcaps_to_process(
         scenario_cfg,
         selected_pcap,
@@ -50,6 +83,20 @@ def extract_from_pcap(dataset_name, scenario, selected_pcap=None):
     for pcap_file in pcaps_to_process:
 
         pcap_path = pcap_dir / pcap_file
+        if output_mode == "chunked":
+            selected_chunk_size = (
+                chunk_size
+                if chunk_size is not None
+                else dataset["flow_chunk_size"]
+            )
+            _extract_pcap_in_chunks(
+                dataset_name,
+                scenario,
+                pcap_path,
+                selected_chunk_size,
+            )
+            continue
+
         #é dito que pcaps grandes podem gerar problemas com nfstream, sendo ideal o try
         try:
             flows = build_flows_from_pcap(pcap_path)

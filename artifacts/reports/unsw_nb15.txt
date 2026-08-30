@@ -1,24 +1,54 @@
 RELATÓRIO DO DATASET unsw_nb15
 
-Tolerância temporal: 60.000 ms
+Tolerância temporal: 1.000 ms
 Fluxos extraídos/reconstruídos: 2.082.628
-Fluxos que receberam rótulo: 2.082.628
-Fluxos sem correspondência de ataque: 2.013.048
-Registros descartados por ambiguidade: 0
-  Esses fluxos foram rotulados como BENIGN por exclusão.
+Fluxos que receberam rótulo: 2.032.817
+Fluxos benignos com correspondência explícita: 1.965.534
+Fluxos sem correspondência descartados: 47.562
+Fluxos com chave ou tempo inválido: 0
+Registros descartados por ambiguidade: 2.249
+
+Resultados por status do matching:
+  benign_matched: 1.965.534
+  attack_matched: 67.283
+  unmatched: 47.562
+  ambiguous_interval_labels: 1.398
+  ambiguous_protocol_wildcard_interval_labels: 851
 
 Distribuição oficial:
   BENIGN: 2.218.761 (87,35%)
   ATTACK: 321.283 (12,65%)
 
 Distribuição reconstruída:
-  BENIGN: 2.013.048 (96,66%)
-  ATTACK: 69.580 (3,34%)
+  BENIGN: 1.965.534 (96,69%)
+  ATTACK: 67.283 (3,31%)
+
+Tipos de ataque na distribuição oficial:
+  Generic: 215.481 (67,07%)
+  Exploits: 44.525 (13,86%)
+  Fuzzers: 24.246 (7,55%)
+  DoS: 16.353 (5,09%)
+  Reconnaissance: 13.987 (4,35%)
+  Analysis: 2.677 (0,83%)
+  Backdoors: 2.329 (0,72%)
+  Shellcode: 1.511 (0,47%)
+  Worms: 174 (0,05%)
+
+Tipos de ataque na distribuição reconstruída:
+  Exploits: 25.240 (37,51%)
+  Fuzzers: 19.968 (29,68%)
+  Reconnaissance: 11.631 (17,29%)
+  Generic: 4.413 (6,56%)
+  DoS: 3.582 (5,32%)
+  Shellcode: 1.511 (2,25%)
+  Analysis: 430 (0,64%)
+  Backdoors: 349 (0,52%)
+  Worms: 159 (0,24%)
 
 Diferença entre as distribuições:
-  BENIGN: diferença de -205.713 registros; diferença de 9,31 pontos percentuais
-  ATTACK: diferença de -251.703 registros; diferença de -9,31 pontos percentuais
+  BENIGN: diferença de -253.227 registros; diferença de 9,34 pontos percentuais
+  ATTACK: diferença de -254.000 registros; diferença de -9,34 pontos percentuais
 
 Verificação do arquivo consolidado:
-  Registros: 2.082.628
+  Registros: 2.032.817
   Coincide com os fluxos rotulados: SIM

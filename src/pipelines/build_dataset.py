@@ -1,3 +1,6 @@
+import json
+from collections import Counter
+
 import numpy as np
 import pandas as pd
 
@@ -20,6 +23,7 @@ FLOW_MATCH_COLUMNS = [
     "dst_port",
     "protocol",
     "bidirectional_first_seen_ms",
+    "bidirectional_last_seen_ms",
 ]
 
 TIME_TOLERANCES = {
@@ -36,11 +40,50 @@ def _prepare_keys(df):
     return create_bidirectional_flow_key(create_flow_key(df))
 
 
+def _count_match_statuses(matched):
+    return Counter(
+        {
+            str(status): int(count)
+            for status, count in matched["match_status"].value_counts().items()
+        }
+    )
+
+
+def _save_matching_summary(
+    dataset_name,
+    scenario,
+    extracted_count,
+    labeled_count,
+    status_counts,
+):
+    dataset_dir = INTERMEDIATE_DATA_DIR / dataset_name
+    dataset_dir.mkdir(parents=True, exist_ok=True)
+    output_path = dataset_dir / "matching_summary.json"
+
+    summaries = {}
+    if output_path.exists():
+        summaries = json.loads(output_path.read_text(encoding="utf-8"))
+
+    summaries[scenario] = {
+        "extracted": int(extracted_count),
+        "labeled": int(labeled_count),
+        "statuses": dict(status_counts),
+    }
+
+    temporary_path = output_path.with_suffix(".json.tmp")
+    temporary_path.write_text(
+        json.dumps(summaries, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    temporary_path.replace(output_path)
+
+
 def build_dataset(
     flows_file,
     labels_file,
     output_file,
     dataset_name,
+    scenario,
     time_tolerance,
 ):
     """Processa o modo tradicional: um Parquet de fluxos por cenário."""
@@ -66,7 +109,14 @@ def build_dataset(
     print(f"Salvando resultado em {output_file}...")
     save_parquet(merged_clean, output_file)
 
-    matched = merged["label"].notna().sum()
+    matched = int(merged["label"].notna().sum())
+    _save_matching_summary(
+        dataset_name,
+        scenario,
+        len(merged),
+        matched,
+        _count_match_statuses(merged),
+    )
     match_rate = matched / len(merged) * 100 if len(merged) else 0
     print(f"Total de flows com label: {matched} ({match_rate:.2f}%)")
     print("Concluído!")
@@ -87,6 +137,16 @@ def _per_pcap_flow_files(dataset_name, scenario):
     if not files:
         raise ValueError(f"Nenhum Parquet de fluxo encontrado em {scenario_dir}")
     return files
+
+
+def _load_overlapping_labels(labels_file, flows, time_tolerance):
+    first_seen = int(flows["bidirectional_first_seen_ms"].min())
+    last_seen = int(flows["bidirectional_last_seen_ms"].max())
+    filters = [
+        ("ts_ms", "<=", last_seen + time_tolerance),
+        ("last_ts_ms", ">=", first_seen - time_tolerance),
+    ]
+    return pd.read_parquet(labels_file, filters=filters)
 
 
 def _load_scenario_flow_index(flow_files):
@@ -183,9 +243,75 @@ def build_per_pcap_scenario(
         dataset_name,
     )
     matched_count = int(matched_index["label"].notna().sum())
+    _save_matching_summary(
+        dataset_name,
+        scenario,
+        len(matched_index),
+        matched_count,
+        _count_match_statuses(matched_index),
+    )
     match_rate = matched_count / len(matched_index) * 100
     print(
         f"Cenário {scenario}: {matched_count}/{len(matched_index)} "
+        f"fluxos rotulados ({match_rate:.2f}%)"
+    )
+    return output_files
+
+
+def build_chunked_scenario(dataset_name, scenario, time_tolerance):
+    """Rotula separadamente cada bloco temporal extraído do PCAP."""
+    flow_files = _per_pcap_flow_files(dataset_name, scenario)
+    labels_file = (
+        INTERMEDIATE_DATA_DIR / dataset_name / f"{scenario}_labels.parquet"
+    )
+    output_dir = PROCESSED_DATA_DIR / dataset_name / scenario
+    output_files = []
+    total_flows = 0
+    total_matched = 0
+    status_counts = Counter()
+
+    for block_number, flows_file in enumerate(flow_files, start=1):
+        flows = load_parquet(flows_file)
+        labels = _load_overlapping_labels(
+            labels_file,
+            flows,
+            time_tolerance,
+        )
+        flows = _prepare_keys(flows)
+        labels = _prepare_keys(labels)
+        matched = match_flows_for_dataset(
+            dataset_name,
+            flows,
+            labels,
+            time_tolerance,
+        )
+        matched_clean = matched.dropna(subset=["label"]).copy()
+        matched_clean = create_column_dataset_name(
+            matched_clean,
+            dataset_name,
+        )
+
+        output_file = output_dir / f"{block_number:06d}.parquet"
+        save_parquet(matched_clean, output_file)
+        output_files.append(output_file)
+        total_flows += len(matched)
+        total_matched += len(matched_clean)
+        status_counts.update(_count_match_statuses(matched))
+        print(
+            f"Bloco {block_number}/{len(flow_files)}: "
+            f"{len(matched_clean)}/{len(matched)} fluxos rotulados"
+        )
+
+    _save_matching_summary(
+        dataset_name,
+        scenario,
+        total_flows,
+        total_matched,
+        status_counts,
+    )
+    match_rate = total_matched / total_flows * 100 if total_flows else 0
+    print(
+        f"Cenário {scenario}: {total_matched}/{total_flows} "
         f"fluxos rotulados ({match_rate:.2f}%)"
     )
     return output_files
@@ -198,7 +324,7 @@ def merge_flows_and_labels(dataset_name, scenario):
 
     dataset_cfg = DATASETS[dataset_name]
     output_mode = dataset_cfg.get("flow_output_mode", "scenario")
-    time_tolerance = TIME_TOLERANCES["1min"]
+    time_tolerance = dataset_cfg["matching_time_tolerance_ms"]
 
     if output_mode == "scenario":
         flows_file = (
@@ -213,10 +339,17 @@ def merge_flows_and_labels(dataset_name, scenario):
             labels_file,
             output_file,
             dataset_name,
+            scenario,
             time_tolerance,
         )
     elif output_mode == "per_pcap":
         return build_per_pcap_scenario(
+            dataset_name,
+            scenario,
+            time_tolerance,
+        )
+    elif output_mode == "chunked":
+        return build_chunked_scenario(
             dataset_name,
             scenario,
             time_tolerance,

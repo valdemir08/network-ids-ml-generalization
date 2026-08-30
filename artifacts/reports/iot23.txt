@@ -1,0 +1,49 @@
+RELATÓRIO DO DATASET iot23
+
+Tolerância temporal: 1 ms
+Fluxos extraídos/reconstruídos: 5.225.503
+Fluxos que receberam rótulo: 5.204.211
+Fluxos benignos com correspondência explícita: 4.563.590
+Fluxos sem correspondência descartados: 21.287
+Fluxos com chave ou tempo inválido: 0
+Registros descartados por ambiguidade: 5
+
+Resultados por status do matching:
+  benign_matched: 4.563.590
+  attack_matched: 640.621
+  unmatched: 21.287
+  ambiguous_interval_labels: 5
+
+Distribuição oficial:
+  BENIGN: 8.753.145 (75,08%)
+  ATTACK: 2.905.918 (24,92%)
+
+Distribuição reconstruída:
+  BENIGN: 4.563.590 (87,69%)
+  ATTACK: 640.621 (12,31%)
+
+Tipos de ataque na distribuição oficial:
+  DDoS: 2.199.696 (75,70%)
+  PartOfAHorizontalPortScan: 685.184 (23,58%)
+  C&C: 15.025 (0,52%)
+  Attack: 5.965 (0,21%)
+  C&C-Torii: 30 (0,00%)
+  C&C-FileDownload: 15 (0,00%)
+  FileDownload: 3 (0,00%)
+
+Tipos de ataque na distribuição reconstruída:
+  DDoS: 351.383 (54,85%)
+  PartOfAHorizontalPortScan: 266.325 (41,57%)
+  C&C: 13.987 (2,18%)
+  Attack: 6.009 (0,94%)
+  C&C-FileDownload: 1.489 (0,23%)
+  C&C-Torii: 1.425 (0,22%)
+  FileDownload: 3 (0,00%)
+
+Diferença entre as distribuições:
+  BENIGN: diferença de -4.189.555 registros; diferença de 12,61 pontos percentuais
+  ATTACK: diferença de -2.265.297 registros; diferença de -12,61 pontos percentuais
+
+Verificação do arquivo consolidado:
+  Registros: 5.204.211
+  Coincide com os fluxos rotulados: SIM

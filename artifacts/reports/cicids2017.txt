@@ -3,20 +3,59 @@ RELATÓRIO DO DATASET cicids2017
 Tolerância temporal: 60.000 ms
 Fluxos extraídos/reconstruídos: 3.304.904
 Fluxos que receberam rótulo: 3.207.414
-Fluxos sem correspondência: 97.490
+Fluxos benignos com correspondência explícita: 2.755.374
+Fluxos sem correspondência descartados: 97.490
+Fluxos com chave ou tempo inválido: 0
 Registros descartados por ambiguidade: 0
+
+Resultados por status do matching:
+  benign_matched: 2.755.374
+  attack_matched: 452.040
+  unmatched: 97.490
 
 Distribuição oficial:
   BENIGN: 2.272.895 (80,30%)
   ATTACK: 557.645 (19,70%)
 
 Distribuição reconstruída:
-  BENIGN: 2.756.158 (85,93%)
-  ATTACK: 451.256 (14,07%)
+  BENIGN: 2.755.374 (85,91%)
+  ATTACK: 452.040 (14,09%)
+
+Tipos de ataque na distribuição oficial:
+  DoS Hulk: 231.072 (41,44%)
+  PortScan: 158.930 (28,50%)
+  DDoS: 128.027 (22,96%)
+  DoS GoldenEye: 10.293 (1,85%)
+  FTP-Patator: 7.938 (1,42%)
+  SSH-Patator: 5.897 (1,06%)
+  DoS slowloris: 5.796 (1,04%)
+  DoS Slowhttptest: 5.499 (0,99%)
+  Bot: 1.966 (0,35%)
+  Web Attack  Brute Force: 1.507 (0,27%)
+  Web Attack  XSS: 652 (0,12%)
+  Infiltration: 36 (0,01%)
+  Web Attack  Sql Injection: 21 (0,00%)
+  Heartbleed: 11 (0,00%)
+
+Tipos de ataque na distribuição reconstruída:
+  DoS Hulk: 162.703 (35,99%)
+  PortScan: 158.948 (35,16%)
+  DDoS: 96.272 (21,30%)
+  DoS GoldenEye: 8.961 (1,98%)
+  DoS Slowhttptest: 7.542 (1,67%)
+  DoS slowloris: 7.310 (1,62%)
+  FTP-Patator: 4.002 (0,89%)
+  SSH-Patator: 2.987 (0,66%)
+  Web Attack  Brute Force: 1.364 (0,30%)
+  Bot: 1.238 (0,27%)
+  Web Attack  XSS: 631 (0,14%)
+  Infiltration: 59 (0,01%)
+  Web Attack  Sql Injection: 12 (0,00%)
+  Heartbleed: 11 (0,00%)
 
 Diferença entre as distribuições:
-  BENIGN: diferença de 483.263 registros; diferença de 5,63 pontos percentuais
-  ATTACK: diferença de -106.389 registros; diferença de -5,63 pontos percentuais
+  BENIGN: diferença de 482.479 registros; diferença de 5,61 pontos percentuais
+  ATTACK: diferença de -105.605 registros; diferença de -5,61 pontos percentuais
 
 Verificação do arquivo consolidado:
   Registros: 3.207.414
