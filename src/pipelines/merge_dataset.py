@@ -28,9 +28,15 @@ def merge_processed_dataset(dataset_name):
     writer = None
     expected_schema = None
     source_row_count = 0
+    merged_file_count = 0
+    empty_file_count = 0
 
     try:
         for file in files:
+            if pq.ParquetFile(file).metadata.num_rows == 0:
+                empty_file_count += 1
+                continue
+
             table = pq.read_table(file)
             if expected_schema is None:
                 expected_schema = table.schema
@@ -40,9 +46,13 @@ def merge_processed_dataset(dataset_name):
 
             writer.write_table(table)
             source_row_count += table.num_rows
+            merged_file_count += 1
     finally:
         if writer is not None:
             writer.close()
+
+    if writer is None:
+        raise ValueError("Nenhum arquivo com registros encontrado para unificação")
 
     final_row_count = pq.ParquetFile(temporary_output).metadata.num_rows
     if final_row_count != source_row_count:
@@ -52,7 +62,8 @@ def merge_processed_dataset(dataset_name):
 
     temporary_output.replace(output_file)
     print(f"Salvo em {output_file}")
-    print(f"Arquivos unificados: {len(files)}")
+    print(f"Arquivos unificados: {merged_file_count}")
+    print(f"Arquivos vazios ignorados: {empty_file_count}")
     print(f"Registros unificados: {final_row_count}")
     return output_file
 

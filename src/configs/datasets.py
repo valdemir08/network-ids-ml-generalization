@@ -137,12 +137,18 @@ DATASETS = {
             "honeypot_7_1",
             "malware_1_1",
             "malware_3_1",
+            "malware_7_1",
             "malware_8_1",
+            "malware_9_1",
             "malware_20_1",
             "malware_21_1",
             "malware_34_1",
             "malware_35_1",
+            "malware_36_1",
             "malware_42_1",
+            "malware_44_1",
+            "malware_48_1",
+            "malware_49_1",
         ],
 
         "scenarios": {

@@ -1,49 +1,61 @@
 RELATÓRIO DO DATASET iot23
 
 Tolerância temporal: 1 ms
-Fluxos extraídos/reconstruídos: 5.225.503
-Fluxos que receberam rótulo: 5.204.211
-Fluxos benignos com correspondência explícita: 4.563.590
-Fluxos sem correspondência descartados: 21.287
+Fluxos extraídos/reconstruídos: 44.383.437
+Fluxos que receberam rótulo: 43.708.530
+Fluxos benignos com correspondência explícita: 4.621.353
+Fluxos sem correspondência descartados: 674.076
 Fluxos com chave ou tempo inválido: 0
-Registros descartados por ambiguidade: 5
+Registros descartados por ambiguidade: 831
 
 Resultados por status do matching:
-  benign_matched: 4.563.590
-  attack_matched: 640.621
-  unmatched: 21.287
-  ambiguous_interval_labels: 5
+  attack_matched: 39.087.177
+  benign_matched: 4.621.353
+  unmatched: 674.076
+  ambiguous_interval_labels: 831
 
 Distribuição oficial:
-  BENIGN: 8.753.145 (75,08%)
-  ATTACK: 2.905.918 (24,92%)
+  BENIGN: 8.861.921 (17,06%)
+  ATTACK: 43.080.383 (82,94%)
 
 Distribuição reconstruída:
-  BENIGN: 4.563.590 (87,69%)
-  ATTACK: 640.621 (12,31%)
+  BENIGN: 4.621.353 (10,57%)
+  ATTACK: 39.087.177 (89,43%)
 
 Tipos de ataque na distribuição oficial:
-  DDoS: 2.199.696 (75,70%)
-  PartOfAHorizontalPortScan: 685.184 (23,58%)
-  C&C: 15.025 (0,52%)
-  Attack: 5.965 (0,21%)
+  Okiru: 24.960.141 (57,94%)
+  PartOfAHorizontalPortScan: 15.832.007 (36,75%)
+  DDoS: 2.239.281 (5,20%)
+  C&C-HeartBeat: 21.466 (0,05%)
+  C&C: 16.961 (0,04%)
+  Attack: 8.717 (0,02%)
+  C&C-PartOfAHorizontalPortScan: 888 (0,00%)
+  C&C-HeartBeat-Attack: 834 (0,00%)
   C&C-Torii: 30 (0,00%)
-  C&C-FileDownload: 15 (0,00%)
-  FileDownload: 3 (0,00%)
+  C&C-FileDownload: 27 (0,00%)
+  FileDownload: 17 (0,00%)
+  C&C-HeartBeat-FileDownload: 11 (0,00%)
+  Okiru-Attack: 3 (0,00%)
 
 Tipos de ataque na distribuição reconstruída:
-  DDoS: 351.383 (54,85%)
-  PartOfAHorizontalPortScan: 266.325 (41,57%)
-  C&C: 13.987 (2,18%)
-  Attack: 6.009 (0,94%)
-  C&C-FileDownload: 1.489 (0,23%)
-  C&C-Torii: 1.425 (0,22%)
-  FileDownload: 3 (0,00%)
+  Okiru: 24.933.472 (63,79%)
+  PartOfAHorizontalPortScan: 13.710.934 (35,08%)
+  DDoS: 401.152 (1,03%)
+  C&C: 15.497 (0,04%)
+  C&C-HeartBeat: 12.959 (0,03%)
+  Attack: 8.371 (0,02%)
+  C&C-FileDownload: 1.940 (0,00%)
+  C&C-Torii: 1.425 (0,00%)
+  C&C-HeartBeat-Attack: 1.087 (0,00%)
+  C&C-PartOfAHorizontalPortScan: 305 (0,00%)
+  FileDownload: 18 (0,00%)
+  C&C-HeartBeat-FileDownload: 11 (0,00%)
+  Okiru-Attack: 6 (0,00%)
 
 Diferença entre as distribuições:
-  BENIGN: diferença de -4.189.555 registros; diferença de 12,61 pontos percentuais
-  ATTACK: diferença de -2.265.297 registros; diferença de -12,61 pontos percentuais
+  BENIGN: diferença de -4.240.568 registros; diferença de -6,49 pontos percentuais
+  ATTACK: diferença de -3.993.206 registros; diferença de 6,49 pontos percentuais
 
 Verificação do arquivo consolidado:
-  Registros: 5.204.211
+  Registros: 43.708.530
   Coincide com os fluxos rotulados: SIM
