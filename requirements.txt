@@ -1,5 +1,6 @@
 cffi==2.0.0
 dpkt==1.9.8
+duckdb==1.5.5
 nfstream==6.6.0
 numpy==2.4.3
 pandas==3.0.1
