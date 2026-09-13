@@ -147,6 +147,14 @@ const_features = {
     "dst2src_urg_packets",
 }
 
+connection_metadata_features = {
+    # Identificam serviços e conexões do ambiente de captura. Também dependem
+    # da orientação atribuída ao fluxo pelo NFStream e podem levar o modelo a
+    # aprender associações específicas do dataset.
+    "src_port",
+    "dst_port",
+}
+
 sparse_tcp_features = {
     # Constantes em ao menos uma base de treino e presentes em menos
     # de 0,2% dos fluxos nas demais.
@@ -342,6 +350,16 @@ identical_features = {
 
 }
 
+ig_features = {
+    "bidirectional_min_ps",
+
+    # não mostrou variabilidade o suficiente.
+    #constante no cic, unsw e apenas 5 registros no iot (benignos) com ipv6
+    "ip_version",
+    #remoção não causou impacto significativo
+    "bidirectional_min_piat_ms",
+}
+
 # métricas src2dst/dst2src dependem da orientação adotada pelo NFStream,
 # definida pelo primeiro pacote observado. Essa orientação pode variar entre
 # capturas e fluxos interrompidos por timeout; são mantidas as métricas
@@ -358,15 +376,15 @@ DIRECTIONAL_PREFIXES = (
 
 CATEGORICAL_COLUMNS = {
     "protocol",
-    "src_port",
-    "dst_port",
     "ip_version",
 }
 
 
 
 columns_to_ignore.update(const_features)
+columns_to_ignore.update(connection_metadata_features)
 columns_to_ignore.update(sparse_tcp_features)
+columns_to_ignore.update(ig_features)
 #comentado até verificar novamente esses atributos
 #columns_to_ignore.update(identical_features)
 
