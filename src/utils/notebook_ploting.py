@@ -98,8 +98,12 @@ def distribution_explorer(df):
                 df_plot[feature] = np.log1p(df_plot[feature])
                 title_suffix = " (log)"
 
-            # colorir por label
-            color = 'label' if color_by_label.value and 'label' in df.columns else None
+            # colorir por rótulo binário
+            color = (
+                'label_binary'
+                if color_by_label.value and 'label_binary' in df.columns
+                else None
+            )
 
             # histograma
             if plot_type.value == 'histograma':
@@ -118,10 +122,10 @@ def distribution_explorer(df):
                 if color:
                     fig = px.box(
                         df_plot,
-                        x='label',
+                        x='label_binary',
                         color=color,
                         y=feature,
-                        title=f'Boxplot{title_suffix} - {feature} por label'
+                        title=f'Boxplot{title_suffix} - {feature} por rótulo'
                     )
                 else:
                     fig = px.box(

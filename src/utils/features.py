@@ -18,6 +18,7 @@ columns_to_ignore = {
     # metadados do processo de rotulagem; não descrevem o tráfego e
     # provocariam vazamento de informação se fossem usados como features
     "label_binary",
+    "label",
     "match_status",
     "match_direction",
     "match_time_diff_ms",
@@ -44,12 +45,28 @@ columns_to_ignore = {
     # strings de altíssima cardinalidade / pouco valor geral / muitos valores nulos
     # o modelo não deve generalizar comportamento e não se prender a dados relacionados ao experimento/dataset
 
-    # porcentagem de valores NULOS (cicids2017)
-    # requested_server_name          50.34
-    # client_fingerprint             89.91
-    # server_fingerprint             89.98
-    # user_agent                     89.96
-    # content_type                   87.22
+    # porcentagem de valores NULOS
+    #
+    # (cicids2017)
+    #server_fingerprint             90.18
+    #client_fingerprint             90.10
+    #user_agent                     89.05
+    #content_type                   85.60
+    #requested_server_name          51.13
+
+    #(unsw)
+    # server_fingerprint             97.95
+    # client_fingerprint             97.94
+    # content_type                   91.30
+    # user_agent                     87.66
+    # requested_server_name          65.63
+
+    #(iot23)
+    # content_type                   99.99
+    # user_agent                     99.99
+    # server_fingerprint             99.99
+    # client_fingerprint             99.99
+    # requested_server_name          99.81
 
     # "requested_server_name", -> nfdoc: Requested server name (SSL/TLS, DNS, HTTP).
     # ex: vast.bp3854372.btrll.com, static.ilcdn.fi, wildcard.moatads.com.edgekey.net, log1.17173.com ....
@@ -126,8 +143,21 @@ columns_to_ignore = {
 
 
 const_features = {
+    #constante nos 3 datasets
     "dst2src_urg_packets",
+}
 
+sparse_tcp_features = {
+    # Constantes em ao menos uma base de treino e presentes em menos
+    # de 0,2% dos fluxos nas demais.
+    "bidirectional_cwr_packets",
+    "bidirectional_ece_packets",
+    "bidirectional_urg_packets",
+    "src2dst_cwr_packets",
+    "src2dst_ece_packets",
+    "src2dst_urg_packets",
+    "dst2src_cwr_packets",
+    "dst2src_ece_packets",
 }
 
 # colunas ignoradas
@@ -312,6 +342,16 @@ identical_features = {
 
 }
 
+# métricas src2dst/dst2src dependem da orientação adotada pelo NFStream,
+# definida pelo primeiro pacote observado. Essa orientação pode variar entre
+# capturas e fluxos interrompidos por timeout; são mantidas as métricas
+# bidirecionais, que descrevem o comportamento agregado sem depender da direção.
+
+DIRECTIONAL_PREFIXES = (
+    "src2dst_",
+    "dst2src_",
+)
+
 
 
 
@@ -326,15 +366,19 @@ CATEGORICAL_COLUMNS = {
 
 
 columns_to_ignore.update(const_features)
-columns_to_ignore.update(identical_features)
-
-TARGET_COLUMN = "label"
+columns_to_ignore.update(sparse_tcp_features)
+#comentado até verificar novamente esses atributos
+#columns_to_ignore.update(identical_features)
 
 
 def split_features(df):
     numeric_cols = df.select_dtypes(include='number').columns.tolist()
 
-    valid_cols = [col for col in df.columns if col not in columns_to_ignore and col != TARGET_COLUMN]
+    valid_cols = [
+        col for col in df.columns
+        if col not in columns_to_ignore
+           and not col.startswith(DIRECTIONAL_PREFIXES)
+    ]
 
     # categóricas incluindo as interpretadas como numéricas
     categorical = [

@@ -176,6 +176,7 @@ def _save_per_pcap_results(
         ].sort_values("_source_row_id")
 
         flows = load_parquet(flows_path)
+        flows = _prepare_keys(flows)
         expected_rows = np.arange(len(flows), dtype=np.int64)
         actual_rows = file_matches["_source_row_id"].to_numpy(dtype=np.int64)
         if not np.array_equal(actual_rows, expected_rows):
