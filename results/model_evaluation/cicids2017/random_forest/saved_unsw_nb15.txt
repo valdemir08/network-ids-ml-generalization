@@ -1,0 +1,10 @@
+Treino: cicids2017 | Modelo: random_forest | Configuração: selecionado pela busca | Teste: unsw_nb15
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.8000    0.9999    0.8888     80740
+      ATTACK     0.0000    0.0000    0.0000     20185
+
+    accuracy                         0.7999    100925
+   macro avg     0.4000    0.5000    0.4444    100925
+weighted avg     0.6400    0.7999    0.7111    100925
