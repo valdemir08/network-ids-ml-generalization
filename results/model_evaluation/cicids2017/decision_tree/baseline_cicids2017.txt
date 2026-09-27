@@ -1,0 +1,10 @@
+Treino: cicids2017 | Modelo: decision_tree | Configuração: padrão | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9972    0.9953    0.9963     80740
+      ATTACK     0.9815    0.9889    0.9852     20185
+
+    accuracy                         0.9941    100925
+   macro avg     0.9894    0.9921    0.9907    100925
+weighted avg     0.9941    0.9941    0.9941    100925
