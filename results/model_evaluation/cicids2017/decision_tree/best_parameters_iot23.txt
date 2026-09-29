@@ -1,0 +1,10 @@
+Treino: cicids2017 | Modelo: decision_tree | Configuração: melhores parâmetros | Teste: iot23
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.8075    0.9927    0.8906     80740
+      ATTACK     0.6471    0.0535    0.0988     20185
+
+    accuracy                         0.8049    100925
+   macro avg     0.7273    0.5231    0.4947    100925
+weighted avg     0.7754    0.8049    0.7322    100925

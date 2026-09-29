@@ -1,0 +1,10 @@
+Treino: iot23 | Modelo: mlp | Configuração: padrão | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.7971    0.9696    0.8749     80740
+      ATTACK     0.0960    0.0129    0.0228     20185
+
+    accuracy                         0.7782    100925
+   macro avg     0.4466    0.4912    0.4489    100925
+weighted avg     0.6569    0.7782    0.7045    100925

@@ -1,0 +1,5 @@
+Treino: unsw_nb15 | Modelo: mlp | Configuração: melhores parâmetros | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           72515            8225
+Real ATTACK           20048             137

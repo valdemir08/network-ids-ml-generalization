@@ -1,0 +1,10 @@
+Treino: cicids2017 | Modelo: random_forest | Configuração: melhores parâmetros | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9984    0.9952    0.9968     80740
+      ATTACK     0.9811    0.9935    0.9872     20185
+
+    accuracy                         0.9949    100925
+   macro avg     0.9897    0.9943    0.9920    100925
+weighted avg     0.9949    0.9949    0.9949    100925

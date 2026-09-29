@@ -1,0 +1,10 @@
+Treino: unsw_nb15 | Modelo: decision_tree | Configuração: melhores parâmetros | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.6281    0.3593    0.4571     80740
+      ATTACK     0.0550    0.1492    0.0804     20185
+
+    accuracy                         0.3173    100925
+   macro avg     0.3416    0.2542    0.2688    100925
+weighted avg     0.5135    0.3173    0.3818    100925

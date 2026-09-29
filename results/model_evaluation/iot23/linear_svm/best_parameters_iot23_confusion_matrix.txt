@@ -1,0 +1,5 @@
+Treino: iot23 | Modelo: linear_svm | Configuração: melhores parâmetros | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           80637             103
+Real ATTACK             174           20011

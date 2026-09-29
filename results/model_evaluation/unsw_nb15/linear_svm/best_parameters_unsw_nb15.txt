@@ -1,0 +1,10 @@
+Treino: unsw_nb15 | Modelo: linear_svm | Configuração: melhores parâmetros | Teste: unsw_nb15
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9587    0.9857    0.9720     80740
+      ATTACK     0.9357    0.8301    0.8797     20185
+
+    accuracy                         0.9546    100925
+   macro avg     0.9472    0.9079    0.9259    100925
+weighted avg     0.9541    0.9546    0.9536    100925

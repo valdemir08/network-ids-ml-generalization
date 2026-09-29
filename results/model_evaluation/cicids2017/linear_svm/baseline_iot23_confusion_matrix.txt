@@ -1,0 +1,5 @@
+Treino: cicids2017 | Modelo: linear_svm | Configuração: padrão | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN            9129           71611
+Real ATTACK           18115            2070

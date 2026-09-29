@@ -1,0 +1,10 @@
+Treino: cicids2017_iot23 | Modelo: mlp | Configuração: padrão | Teste: unsw_nb15
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.8054    0.9951    0.8903     80740
+      ATTACK     0.6621    0.0382    0.0723     20185
+
+    accuracy                         0.8037    100925
+   macro avg     0.7337    0.5167    0.4813    100925
+weighted avg     0.7767    0.8037    0.7267    100925

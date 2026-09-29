@@ -1,0 +1,5 @@
+Treino: unsw_nb15 | Modelo: random_forest | Configuração: melhores parâmetros | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN            7466           73274
+Real ATTACK           19966             219

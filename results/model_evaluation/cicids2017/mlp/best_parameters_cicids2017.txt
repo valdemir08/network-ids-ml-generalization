@@ -1,0 +1,10 @@
+Treino: cicids2017 | Modelo: mlp | Configuração: melhores parâmetros | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9978    0.9943    0.9961     80740
+      ATTACK     0.9775    0.9913    0.9844     20185
+
+    accuracy                         0.9937    100925
+   macro avg     0.9877    0.9928    0.9902    100925
+weighted avg     0.9938    0.9937    0.9937    100925

@@ -1,0 +1,5 @@
+Treino: cicids2017 | Modelo: xgboost | Configuração: padrão | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN            9370           71370
+Real ATTACK           19975             210
