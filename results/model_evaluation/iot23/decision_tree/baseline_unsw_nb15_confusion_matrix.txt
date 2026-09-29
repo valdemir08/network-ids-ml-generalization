@@ -1,0 +1,5 @@
+Treino: iot23 | Modelo: decision_tree | Configuração: padrão | Teste: unsw_nb15
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           30320           50420
+Real ATTACK           13457            6728

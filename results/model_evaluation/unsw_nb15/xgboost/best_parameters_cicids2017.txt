@@ -1,0 +1,10 @@
+Treino: unsw_nb15 | Modelo: xgboost | Configuração: melhores parâmetros | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.6348    0.3691    0.4668     80740
+      ATTACK     0.0562    0.1504    0.0819     20185
+
+    accuracy                         0.3254    100925
+   macro avg     0.3455    0.2598    0.2743    100925
+weighted avg     0.5191    0.3254    0.3898    100925

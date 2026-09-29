@@ -1,0 +1,10 @@
+Treino: unsw_nb15_iot23 | Modelo: decision_tree | Configuração: padrão | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.7849    0.8150    0.7997     80740
+      ATTACK     0.1261    0.1068    0.1156     20185
+
+    accuracy                         0.6734    100925
+   macro avg     0.4555    0.4609    0.4577    100925
+weighted avg     0.6532    0.6734    0.6629    100925

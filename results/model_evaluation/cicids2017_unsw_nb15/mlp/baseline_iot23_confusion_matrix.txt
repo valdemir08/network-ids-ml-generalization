@@ -1,0 +1,5 @@
+Treino: cicids2017_unsw_nb15 | Modelo: mlp | Configuração: padrão | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN            1336           79404
+Real ATTACK            3735           16450

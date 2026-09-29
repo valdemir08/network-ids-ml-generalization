@@ -1,0 +1,5 @@
+Treino: unsw_nb15 | Modelo: linear_svm | Configuração: padrão | Teste: cicids2017
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           75305            5435
+Real ATTACK           10451            9734

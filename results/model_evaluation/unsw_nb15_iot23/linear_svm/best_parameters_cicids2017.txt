@@ -1,0 +1,10 @@
+Treino: unsw_nb15_iot23 | Modelo: linear_svm | Configuração: melhores parâmetros | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9865    0.3927    0.5617     80740
+      ATTACK     0.2871    0.9785    0.4440     20185
+
+    accuracy                         0.5098    100925
+   macro avg     0.6368    0.6856    0.5029    100925
+weighted avg     0.8466    0.5098    0.5382    100925

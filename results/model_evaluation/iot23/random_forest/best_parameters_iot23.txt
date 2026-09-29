@@ -1,0 +1,10 @@
+Treino: iot23 | Modelo: random_forest | Configuração: melhores parâmetros | Teste: iot23
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9986    0.9999    0.9993     80740
+      ATTACK     0.9997    0.9945    0.9971     20185
+
+    accuracy                         0.9988    100925
+   macro avg     0.9991    0.9972    0.9982    100925
+weighted avg     0.9988    0.9988    0.9988    100925

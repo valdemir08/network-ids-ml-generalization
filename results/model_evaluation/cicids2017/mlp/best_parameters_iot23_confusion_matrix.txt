@@ -1,0 +1,5 @@
+Treino: cicids2017 | Modelo: mlp | Configuração: melhores parâmetros | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN            8985           71755
+Real ATTACK           20043             142

@@ -1,0 +1,10 @@
+Treino: iot23 | Modelo: xgboost | Configuração: melhores parâmetros | Teste: unsw_nb15
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.7907    0.7163    0.7517     80740
+      ATTACK     0.1756    0.2416    0.2034     20185
+
+    accuracy                         0.6214    100925
+   macro avg     0.4831    0.4790    0.4775    100925
+weighted avg     0.6677    0.6214    0.6420    100925

@@ -1,0 +1,5 @@
+Treino: unsw_nb15_iot23 | Modelo: linear_svm | Configuração: melhores parâmetros | Teste: cicids2017
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           31703           49037
+Real ATTACK             434           19751

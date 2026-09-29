@@ -1,0 +1,10 @@
+Treino: unsw_nb15 | Modelo: decision_tree | Configuração: padrão | Teste: unsw_nb15
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9892    0.9877    0.9884     80740
+      ATTACK     0.9512    0.9568    0.9540     20185
+
+    accuracy                         0.9815    100925
+   macro avg     0.9702    0.9722    0.9712    100925
+weighted avg     0.9816    0.9815    0.9816    100925

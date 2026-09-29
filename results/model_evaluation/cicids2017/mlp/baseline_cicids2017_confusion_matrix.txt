@@ -1,0 +1,5 @@
+Treino: cicids2017 | Modelo: mlp | Configuração: padrão | Teste: cicids2017
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           80271             469
+Real ATTACK             169           20016

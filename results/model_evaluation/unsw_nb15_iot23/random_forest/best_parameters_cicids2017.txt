@@ -1,0 +1,10 @@
+Treino: unsw_nb15_iot23 | Modelo: random_forest | Configuração: melhores parâmetros | Teste: cicids2017
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.8226    0.8449    0.8336     80740
+      ATTACK     0.3040    0.2710    0.2866     20185
+
+    accuracy                         0.7301    100925
+   macro avg     0.5633    0.5580    0.5601    100925
+weighted avg     0.7189    0.7301    0.7242    100925

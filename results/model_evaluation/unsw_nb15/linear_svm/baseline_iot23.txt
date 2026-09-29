@@ -1,0 +1,10 @@
+Treino: unsw_nb15 | Modelo: linear_svm | Configuração: padrão | Teste: iot23
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.7982    0.9820    0.8806     80740
+      ATTACK     0.0908    0.0072    0.0133     20185
+
+    accuracy                         0.7870    100925
+   macro avg     0.4445    0.4946    0.4470    100925
+weighted avg     0.6568    0.7870    0.7072    100925
