@@ -1,5 +1,0 @@
-Treino: iot23 | Modelo: decision_tree | Configuração: melhores parâmetros | Teste: iot23
-
-             Predito BENIGN  Predito ATTACK
-Real BENIGN           80730              10
-Real ATTACK             109           20076

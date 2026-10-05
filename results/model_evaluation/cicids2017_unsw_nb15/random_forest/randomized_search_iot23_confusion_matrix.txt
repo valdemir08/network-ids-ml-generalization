@@ -1,0 +1,5 @@
+Treino: cicids2017_unsw_nb15 | Modelo: random_forest | Configuração: RandomizedSearchCV | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN            2672           78068
+Real ATTACK           19990             195

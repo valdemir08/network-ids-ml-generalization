@@ -1,0 +1,10 @@
+Treino: cicids2017_unsw_nb15 | Modelo: linear_svm | Configuração: RandomizedSearchCV | Teste: iot23
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.3522    0.1093    0.1668     80740
+      ATTACK     0.0521    0.1960    0.0824     20185
+
+    accuracy                         0.1266    100925
+   macro avg     0.2022    0.1526    0.1246    100925
+weighted avg     0.2922    0.1266    0.1499    100925

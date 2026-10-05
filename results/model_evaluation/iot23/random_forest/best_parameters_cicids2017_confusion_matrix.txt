@@ -1,5 +1,0 @@
-Treino: iot23 | Modelo: random_forest | Configuração: melhores parâmetros | Teste: cicids2017
-
-             Predito BENIGN  Predito ATTACK
-Real BENIGN           79134            1606
-Real ATTACK           16659            3526

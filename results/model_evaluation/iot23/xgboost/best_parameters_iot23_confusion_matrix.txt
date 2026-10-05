@@ -1,5 +1,0 @@
-Treino: iot23 | Modelo: xgboost | Configuração: melhores parâmetros | Teste: iot23
-
-             Predito BENIGN  Predito ATTACK
-Real BENIGN           80732               8
-Real ATTACK             108           20077

@@ -1,0 +1,10 @@
+Treino: unsw_nb15 | Modelo: linear_svm | Configuração: RandomizedSearchCV | Teste: iot23
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.7979    0.9795    0.8794     80740
+      ATTACK     0.0853    0.0076    0.0140     20185
+
+    accuracy                         0.7852    100925
+   macro avg     0.4416    0.4936    0.4467    100925
+weighted avg     0.6554    0.7852    0.7064    100925

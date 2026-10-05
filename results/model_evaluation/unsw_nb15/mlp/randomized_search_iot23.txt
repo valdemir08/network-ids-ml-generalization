@@ -1,0 +1,10 @@
+Treino: unsw_nb15 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: iot23
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.7829    0.8984    0.8367     80740
+      ATTACK     0.0083    0.0034    0.0048     20185
+
+    accuracy                         0.7194    100925
+   macro avg     0.3956    0.4509    0.4208    100925
+weighted avg     0.6280    0.7194    0.6703    100925

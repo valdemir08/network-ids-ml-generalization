@@ -1,0 +1,5 @@
+Treino: iot23 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           80570             170
+Real ATTACK           20053             132
