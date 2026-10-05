@@ -1,0 +1,5 @@
+Treino: unsw_nb15 | Modelo: xgboost | Configuração: RandomizedSearchCV | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN            7990           72750
+Real ATTACK           19972             213

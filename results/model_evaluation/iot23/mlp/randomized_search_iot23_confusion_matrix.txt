@@ -1,0 +1,5 @@
+Treino: iot23 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: iot23
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           80737               3
+Real ATTACK             184           20001

@@ -1,0 +1,10 @@
+Treino: iot23 | Modelo: linear_svm | Configuração: RandomizedSearchCV | Teste: iot23
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9978    0.9987    0.9983     80740
+      ATTACK     0.9948    0.9914    0.9931     20185
+
+    accuracy                         0.9972    100925
+   macro avg     0.9963    0.9950    0.9957    100925
+weighted avg     0.9972    0.9972    0.9972    100925

@@ -1,0 +1,10 @@
+Treino: cicids2017 | Modelo: linear_svm | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.7992    0.9934    0.8858     80740
+      ATTACK     0.0601    0.0017    0.0033     20185
+
+    accuracy                         0.7951    100925
+   macro avg     0.4296    0.4975    0.4445    100925
+weighted avg     0.6514    0.7951    0.7093    100925

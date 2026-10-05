@@ -1,5 +1,0 @@
-Treino: unsw_nb15 | Modelo: decision_tree | Configuração: melhores parâmetros | Teste: iot23
-
-             Predito BENIGN  Predito ATTACK
-Real BENIGN            1015           79725
-Real ATTACK           19078            1107

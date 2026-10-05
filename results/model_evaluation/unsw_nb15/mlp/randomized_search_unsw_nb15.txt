@@ -1,0 +1,10 @@
+Treino: unsw_nb15 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.9988    0.9836    0.9912     80740
+      ATTACK     0.9382    0.9954    0.9659     20185
+
+    accuracy                         0.9860    100925
+   macro avg     0.9685    0.9895    0.9785    100925
+weighted avg     0.9867    0.9860    0.9861    100925

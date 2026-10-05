@@ -1,0 +1,5 @@
+Treino: unsw_nb15 | Modelo: decision_tree | Configuração: RandomizedSearchCV | Teste: cicids2017
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           30553           50187
+Real ATTACK           16456            3729

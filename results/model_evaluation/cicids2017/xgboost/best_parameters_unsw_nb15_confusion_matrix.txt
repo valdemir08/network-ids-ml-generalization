@@ -1,5 +1,0 @@
-Treino: cicids2017 | Modelo: xgboost | Configuração: melhores parâmetros | Teste: unsw_nb15
-
-             Predito BENIGN  Predito ATTACK
-Real BENIGN           80711              29
-Real ATTACK           20185               0

@@ -1,0 +1,5 @@
+Treino: cicids2017 | Modelo: random_forest | Configuração: RandomizedSearchCV | Teste: cicids2017
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           80349             391
+Real ATTACK             132           20053

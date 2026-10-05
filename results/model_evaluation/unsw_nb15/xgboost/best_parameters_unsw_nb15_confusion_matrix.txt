@@ -1,5 +1,0 @@
-Treino: unsw_nb15 | Modelo: xgboost | Configuração: melhores parâmetros | Teste: unsw_nb15
-
-             Predito BENIGN  Predito ATTACK
-Real BENIGN           79478            1262
-Real ATTACK              33           20152

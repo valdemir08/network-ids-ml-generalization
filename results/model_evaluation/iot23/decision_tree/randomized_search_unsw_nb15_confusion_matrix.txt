@@ -1,0 +1,5 @@
+Treino: iot23 | Modelo: decision_tree | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+
+             Predito BENIGN  Predito ATTACK
+Real BENIGN           30458           50282
+Real ATTACK           13448            6737

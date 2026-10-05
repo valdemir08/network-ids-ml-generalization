@@ -1,0 +1,10 @@
+Treino: cicids2017_unsw_nb15 | Modelo: xgboost | Configuração: RandomizedSearchCV | Teste: iot23
+
+              precision    recall  f1-score   support
+
+      BENIGN     0.1130    0.0316    0.0494     80740
+      ATTACK     0.0020    0.0079    0.0032     20185
+
+    accuracy                         0.0268    100925
+   macro avg     0.0575    0.0197    0.0263    100925
+weighted avg     0.0908    0.0268    0.0401    100925
