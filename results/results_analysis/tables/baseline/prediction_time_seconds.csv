@@ -1,0 +1,61 @@
+model,training_method,training_source,test_source,scenario_type,prediction_time_seconds
+Árvore de decisão,Baseline,CICIDS2017,CICIDS2017,Intra-dataset,0.025293499988038
+SVM linear,Baseline,CICIDS2017,CICIDS2017,Intra-dataset,0.0242375999805517
+MLP,Baseline,CICIDS2017,CICIDS2017,Intra-dataset,0.0518512999988161
+Random Forest,Baseline,CICIDS2017,CICIDS2017,Intra-dataset,0.4426905000000261
+XGBoost,Baseline,CICIDS2017,CICIDS2017,Intra-dataset,0.2064616000279784
+Árvore de decisão,Baseline,CICIDS2017,IoT-23,Cross-dataset,0.0238909000181593
+SVM linear,Baseline,CICIDS2017,IoT-23,Cross-dataset,0.0193162999930791
+MLP,Baseline,CICIDS2017,IoT-23,Cross-dataset,0.0681274999515153
+Random Forest,Baseline,CICIDS2017,IoT-23,Cross-dataset,0.3117077000206336
+XGBoost,Baseline,CICIDS2017,IoT-23,Cross-dataset,0.1401927000260912
+Árvore de decisão,Baseline,CICIDS2017,UNSW-NB15,Cross-dataset,0.024147999996785
+SVM linear,Baseline,CICIDS2017,UNSW-NB15,Cross-dataset,0.0198158999555744
+MLP,Baseline,CICIDS2017,UNSW-NB15,Cross-dataset,0.0541248000226914
+Random Forest,Baseline,CICIDS2017,UNSW-NB15,Cross-dataset,0.3998024000320583
+XGBoost,Baseline,CICIDS2017,UNSW-NB15,Cross-dataset,0.1387283999938517
+Árvore de decisão,Baseline,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.0257450000499375
+SVM linear,Baseline,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.019186699995771
+MLP,Baseline,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.0516602999996393
+Random Forest,Baseline,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.4104216999839991
+XGBoost,Baseline,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.1741629000171087
+Árvore de decisão,Baseline,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.0272097999695688
+SVM linear,Baseline,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.0188363000052049
+MLP,Baseline,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.0538910999894142
+Random Forest,Baseline,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.5728355000028387
+XGBoost,Baseline,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.2277735999668948
+Árvore de decisão,Baseline,IoT-23,CICIDS2017,Cross-dataset,0.0255192999611608
+SVM linear,Baseline,IoT-23,CICIDS2017,Cross-dataset,0.0211776999640278
+MLP,Baseline,IoT-23,CICIDS2017,Cross-dataset,0.0504106999724172
+Random Forest,Baseline,IoT-23,CICIDS2017,Cross-dataset,0.5295348999788985
+XGBoost,Baseline,IoT-23,CICIDS2017,Cross-dataset,0.1728414000244811
+Árvore de decisão,Baseline,IoT-23,IoT-23,Intra-dataset,0.0268387999967671
+SVM linear,Baseline,IoT-23,IoT-23,Intra-dataset,0.0290212000254541
+MLP,Baseline,IoT-23,IoT-23,Intra-dataset,0.052493100054562
+Random Forest,Baseline,IoT-23,IoT-23,Intra-dataset,0.5807529000448994
+XGBoost,Baseline,IoT-23,IoT-23,Intra-dataset,0.1734950999962166
+Árvore de decisão,Baseline,IoT-23,UNSW-NB15,Cross-dataset,0.0243610999896191
+SVM linear,Baseline,IoT-23,UNSW-NB15,Cross-dataset,0.026005299994722
+MLP,Baseline,IoT-23,UNSW-NB15,Cross-dataset,0.0744797999504953
+Random Forest,Baseline,IoT-23,UNSW-NB15,Cross-dataset,0.3925722999847494
+XGBoost,Baseline,IoT-23,UNSW-NB15,Cross-dataset,0.2468191999942064
+Árvore de decisão,Baseline,UNSW-NB15,CICIDS2017,Cross-dataset,0.030456900014542
+SVM linear,Baseline,UNSW-NB15,CICIDS2017,Cross-dataset,0.0203284999588504
+MLP,Baseline,UNSW-NB15,CICIDS2017,Cross-dataset,0.0741663000080734
+Random Forest,Baseline,UNSW-NB15,CICIDS2017,Cross-dataset,0.5302753999712877
+XGBoost,Baseline,UNSW-NB15,CICIDS2017,Cross-dataset,0.2793749999837018
+Árvore de decisão,Baseline,UNSW-NB15,IoT-23,Cross-dataset,0.0256493999622762
+SVM linear,Baseline,UNSW-NB15,IoT-23,Cross-dataset,0.0195732999709434
+MLP,Baseline,UNSW-NB15,IoT-23,Cross-dataset,0.0692998000304214
+Random Forest,Baseline,UNSW-NB15,IoT-23,Cross-dataset,0.4435535000520758
+XGBoost,Baseline,UNSW-NB15,IoT-23,Cross-dataset,0.241335499973502
+Árvore de decisão,Baseline,UNSW-NB15,UNSW-NB15,Intra-dataset,0.0303743000258691
+SVM linear,Baseline,UNSW-NB15,UNSW-NB15,Intra-dataset,0.0267282000277191
+MLP,Baseline,UNSW-NB15,UNSW-NB15,Intra-dataset,0.0714589999988675
+Random Forest,Baseline,UNSW-NB15,UNSW-NB15,Intra-dataset,0.6913651000359096
+XGBoost,Baseline,UNSW-NB15,UNSW-NB15,Intra-dataset,0.182274300022982
+Árvore de decisão,Baseline,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.0280009000562131
+SVM linear,Baseline,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.0203697999822907
+MLP,Baseline,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.0626962999813258
+Random Forest,Baseline,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.5059525000397116
+XGBoost,Baseline,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.1726023000082932

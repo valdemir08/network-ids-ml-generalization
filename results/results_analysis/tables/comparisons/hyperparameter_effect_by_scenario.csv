@@ -1,0 +1,4 @@
+scenario_type,experiments,improved,worsened,unchanged,f1_attack_delta_mean,f1_attack_delta_median
+Intra-dataset,15,7,8,0,0.013168317003789539,-2.4643334498919423e-05
+Cross-dataset,30,10,18,2,-0.019851791013828883,-0.0004030669708016
+Combinado,15,6,9,0,0.015844867980445838,-0.0018949923789316

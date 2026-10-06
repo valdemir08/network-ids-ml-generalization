@@ -1,0 +1,3 @@
+destaque,model,training_method,training_source,test_source,scenario_type,accuracy,balanced_accuracy,precision_attack,recall_attack,f1_attack,precision_benign,recall_benign,f1_benign,f1_macro
+Melhor resultado por cenário,SVM linear,Baseline,UNSW-NB15,CICIDS2017,Cross-dataset,0.8425959871191478,0.7074622244240774,0.6417034741907839,0.4822392865989596,0.550659048481077,0.878130976258221,0.932685162249195,0.9045862963674804,0.7276226724242787
+Pior resultado por cenário,MLP,Com hiperparâmetros,IoT-23,CICIDS2017,Cross-dataset,0.7868516224919495,0.4917822640574684,0.0,0.0,0.0,0.7973352878571859,0.9835645281149368,0.8807128835852677,0.4403564417926338

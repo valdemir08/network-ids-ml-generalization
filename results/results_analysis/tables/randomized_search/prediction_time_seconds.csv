@@ -1,0 +1,61 @@
+model,training_method,training_source,test_source,scenario_type,prediction_time_seconds
+Árvore de decisão,Com hiperparâmetros,CICIDS2017,CICIDS2017,Intra-dataset,0.0233183999662287
+SVM linear,Com hiperparâmetros,CICIDS2017,CICIDS2017,Intra-dataset,0.0194761999882757
+MLP,Com hiperparâmetros,CICIDS2017,CICIDS2017,Intra-dataset,0.0579266999848187
+Random Forest,Com hiperparâmetros,CICIDS2017,CICIDS2017,Intra-dataset,1.0433354999986475
+XGBoost,Com hiperparâmetros,CICIDS2017,CICIDS2017,Intra-dataset,0.4006203000317327
+Árvore de decisão,Com hiperparâmetros,CICIDS2017,IoT-23,Cross-dataset,0.0230785000021569
+SVM linear,Com hiperparâmetros,CICIDS2017,IoT-23,Cross-dataset,0.0183305000537075
+MLP,Com hiperparâmetros,CICIDS2017,IoT-23,Cross-dataset,0.0522895999602042
+Random Forest,Com hiperparâmetros,CICIDS2017,IoT-23,Cross-dataset,0.6382926000514999
+XGBoost,Com hiperparâmetros,CICIDS2017,IoT-23,Cross-dataset,0.3774789000162855
+Árvore de decisão,Com hiperparâmetros,CICIDS2017,UNSW-NB15,Cross-dataset,0.0237242999719455
+SVM linear,Com hiperparâmetros,CICIDS2017,UNSW-NB15,Cross-dataset,0.0195248000090941
+MLP,Com hiperparâmetros,CICIDS2017,UNSW-NB15,Cross-dataset,0.0603191999834962
+Random Forest,Com hiperparâmetros,CICIDS2017,UNSW-NB15,Cross-dataset,0.7723273999872617
+XGBoost,Com hiperparâmetros,CICIDS2017,UNSW-NB15,Cross-dataset,0.5642548999749124
+Árvore de decisão,Com hiperparâmetros,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.0289684000308625
+SVM linear,Com hiperparâmetros,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.019010399992112
+MLP,Com hiperparâmetros,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.0712121999822557
+Random Forest,Com hiperparâmetros,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,1.008007299969904
+XGBoost,Com hiperparâmetros,CICIDS2017 + IoT-23,UNSW-NB15,Combinado,0.4139466999913566
+Árvore de decisão,Com hiperparâmetros,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.024772299977485
+SVM linear,Com hiperparâmetros,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.0186119999852962
+MLP,Com hiperparâmetros,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.0548266000114381
+Random Forest,Com hiperparâmetros,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.8308412000187673
+XGBoost,Com hiperparâmetros,CICIDS2017 + UNSW-NB15,IoT-23,Combinado,0.4979797000414692
+Árvore de decisão,Com hiperparâmetros,IoT-23,CICIDS2017,Cross-dataset,0.035462700005155
+SVM linear,Com hiperparâmetros,IoT-23,CICIDS2017,Cross-dataset,0.0210076000075787
+MLP,Com hiperparâmetros,IoT-23,CICIDS2017,Cross-dataset,0.0860883999848738
+Random Forest,Com hiperparâmetros,IoT-23,CICIDS2017,Cross-dataset,0.7387861000024714
+XGBoost,Com hiperparâmetros,IoT-23,CICIDS2017,Cross-dataset,0.317552299995441
+Árvore de decisão,Com hiperparâmetros,IoT-23,IoT-23,Intra-dataset,0.0258526999969035
+SVM linear,Com hiperparâmetros,IoT-23,IoT-23,Intra-dataset,0.0259048999869264
+MLP,Com hiperparâmetros,IoT-23,IoT-23,Intra-dataset,0.092537899967283
+Random Forest,Com hiperparâmetros,IoT-23,IoT-23,Intra-dataset,0.8081812000018544
+XGBoost,Com hiperparâmetros,IoT-23,IoT-23,Intra-dataset,0.4572549000149593
+Árvore de decisão,Com hiperparâmetros,IoT-23,UNSW-NB15,Cross-dataset,0.044093000004068
+SVM linear,Com hiperparâmetros,IoT-23,UNSW-NB15,Cross-dataset,0.0227098999894224
+MLP,Com hiperparâmetros,IoT-23,UNSW-NB15,Cross-dataset,0.1163187999627552
+Random Forest,Com hiperparâmetros,IoT-23,UNSW-NB15,Cross-dataset,0.71625800000038
+XGBoost,Com hiperparâmetros,IoT-23,UNSW-NB15,Cross-dataset,0.4641503000166267
+Árvore de decisão,Com hiperparâmetros,UNSW-NB15,CICIDS2017,Cross-dataset,0.024979899986647
+SVM linear,Com hiperparâmetros,UNSW-NB15,CICIDS2017,Cross-dataset,0.0197870999691076
+MLP,Com hiperparâmetros,UNSW-NB15,CICIDS2017,Cross-dataset,0.1418584999628365
+Random Forest,Com hiperparâmetros,UNSW-NB15,CICIDS2017,Cross-dataset,0.8978226999752223
+XGBoost,Com hiperparâmetros,UNSW-NB15,CICIDS2017,Cross-dataset,0.5107783999992535
+Árvore de decisão,Com hiperparâmetros,UNSW-NB15,IoT-23,Cross-dataset,0.0284950000350363
+SVM linear,Com hiperparâmetros,UNSW-NB15,IoT-23,Cross-dataset,0.0286838000174611
+MLP,Com hiperparâmetros,UNSW-NB15,IoT-23,Cross-dataset,0.0785982999950647
+Random Forest,Com hiperparâmetros,UNSW-NB15,IoT-23,Cross-dataset,0.5721910999855027
+XGBoost,Com hiperparâmetros,UNSW-NB15,IoT-23,Cross-dataset,0.6036255999933928
+Árvore de decisão,Com hiperparâmetros,UNSW-NB15,UNSW-NB15,Intra-dataset,0.0245761999976821
+SVM linear,Com hiperparâmetros,UNSW-NB15,UNSW-NB15,Intra-dataset,0.020461999985855
+MLP,Com hiperparâmetros,UNSW-NB15,UNSW-NB15,Intra-dataset,0.1069497000426054
+Random Forest,Com hiperparâmetros,UNSW-NB15,UNSW-NB15,Intra-dataset,1.192993100034073
+XGBoost,Com hiperparâmetros,UNSW-NB15,UNSW-NB15,Intra-dataset,0.5884333999711089
+Árvore de decisão,Com hiperparâmetros,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.0261237000231631
+SVM linear,Com hiperparâmetros,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.0194096000050194
+MLP,Com hiperparâmetros,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.0761426999815739
+Random Forest,Com hiperparâmetros,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,1.1436090000206605
+XGBoost,Com hiperparâmetros,UNSW-NB15 + IoT-23,CICIDS2017,Combinado,0.4180854000151157
