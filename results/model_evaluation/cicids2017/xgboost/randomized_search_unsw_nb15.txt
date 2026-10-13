@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: xgboost | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+Treino: cicids2017 | Modelo: xgboost | Teste: unsw_nb15
 
               precision    recall  f1-score   support
 

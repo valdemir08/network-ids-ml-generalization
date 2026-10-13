@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: linear_svm | Configuração: RandomizedSearchCV | Teste: iot23
+Treino: cicids2017 | Modelo: linear_svm | Teste: iot23
 
               precision    recall  f1-score   support
 

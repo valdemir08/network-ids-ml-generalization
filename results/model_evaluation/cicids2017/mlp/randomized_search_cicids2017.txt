@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: cicids2017
+Treino: cicids2017 | Modelo: mlp | Teste: cicids2017
 
               precision    recall  f1-score   support
 

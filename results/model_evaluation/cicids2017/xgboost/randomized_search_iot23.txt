@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: xgboost | Configuração: RandomizedSearchCV | Teste: iot23
+Treino: cicids2017 | Modelo: xgboost | Teste: iot23
 
               precision    recall  f1-score   support
 

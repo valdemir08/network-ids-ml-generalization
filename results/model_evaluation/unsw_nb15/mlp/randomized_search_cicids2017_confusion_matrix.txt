@@ -1,5 +1,5 @@
-Treino: unsw_nb15 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: cicids2017
+Treino: unsw_nb15 | Modelo: mlp | Teste: cicids2017
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           51119           29621
-Real ATTACK           10236            9949
+Real BENIGN           68034           12706
+Real ATTACK           10623            9562

@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: xgboost | Configuração: RandomizedSearchCV | Teste: cicids2017
+Treino: cicids2017 | Modelo: xgboost | Teste: cicids2017
 
              Predito BENIGN  Predito ATTACK
 Real BENIGN           80321             419

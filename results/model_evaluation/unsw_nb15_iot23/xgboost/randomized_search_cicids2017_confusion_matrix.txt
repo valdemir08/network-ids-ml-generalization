@@ -1,5 +1,5 @@
-Treino: unsw_nb15_iot23 | Modelo: xgboost | Configuração: RandomizedSearchCV | Teste: cicids2017
+Treino: unsw_nb15_iot23 | Modelo: xgboost | Teste: cicids2017
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           68789           11951
-Real ATTACK           13856            6329
+Real BENIGN           70873            9867
+Real ATTACK           19056            1129

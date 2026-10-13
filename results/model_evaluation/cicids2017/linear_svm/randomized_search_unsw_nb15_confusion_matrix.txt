@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: linear_svm | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+Treino: cicids2017 | Modelo: linear_svm | Teste: unsw_nb15
 
              Predito BENIGN  Predito ATTACK
 Real BENIGN           80208             532

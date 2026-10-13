@@ -1,4 +1,4 @@
-Treino: iot23 | Modelo: xgboost | Configuração: RandomizedSearchCV | Teste: cicids2017
+Treino: iot23 | Modelo: xgboost | Teste: cicids2017
 
              Predito BENIGN  Predito ATTACK
 Real BENIGN           75895            4845

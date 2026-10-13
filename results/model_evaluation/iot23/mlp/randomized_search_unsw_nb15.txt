@@ -1,4 +1,4 @@
-Treino: iot23 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+Treino: iot23 | Modelo: mlp | Teste: unsw_nb15
 
               precision    recall  f1-score   support
 
