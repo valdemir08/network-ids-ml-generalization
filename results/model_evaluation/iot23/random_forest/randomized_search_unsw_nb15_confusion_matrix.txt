@@ -1,5 +1,5 @@
-Treino: iot23 | Modelo: random_forest | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+Treino: iot23 | Modelo: random_forest | Teste: unsw_nb15
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           79367            1373
-Real ATTACK           18793            1392
+Real BENIGN           75040            5700
+Real ATTACK           18526            1659

@@ -1,10 +1,10 @@
-Treino: unsw_nb15 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: cicids2017
+Treino: unsw_nb15 | Modelo: mlp | Teste: cicids2017
 
               precision    recall  f1-score   support
 
-      BENIGN     0.8332    0.6331    0.7195     80740
-      ATTACK     0.2514    0.4929    0.3330     20185
+      BENIGN     0.8649    0.8426    0.8536     80740
+      ATTACK     0.4294    0.4737    0.4505     20185
 
-    accuracy                         0.6051    100925
-   macro avg     0.5423    0.5630    0.5262    100925
-weighted avg     0.7168    0.6051    0.6422    100925
+    accuracy                         0.7688    100925
+   macro avg     0.6472    0.6582    0.6521    100925
+weighted avg     0.7778    0.7688    0.7730    100925

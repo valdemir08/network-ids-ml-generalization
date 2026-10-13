@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: linear_svm | Configuração: RandomizedSearchCV | Teste: cicids2017
+Treino: cicids2017 | Modelo: linear_svm | Teste: cicids2017
 
               precision    recall  f1-score   support
 

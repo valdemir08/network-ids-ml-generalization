@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: iot23
+Treino: cicids2017 | Modelo: mlp | Teste: iot23
 
              Predito BENIGN  Predito ATTACK
 Real BENIGN            8945           71795

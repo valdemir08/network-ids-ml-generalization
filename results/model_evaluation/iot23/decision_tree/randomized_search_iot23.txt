@@ -1,4 +1,4 @@
-Treino: iot23 | Modelo: decision_tree | Configuração: RandomizedSearchCV | Teste: iot23
+Treino: iot23 | Modelo: decision_tree | Teste: iot23
 
               precision    recall  f1-score   support
 

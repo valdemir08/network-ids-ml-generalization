@@ -1,4 +1,4 @@
-Treino: unsw_nb15 | Modelo: xgboost | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+Treino: unsw_nb15 | Modelo: xgboost | Teste: unsw_nb15
 
              Predito BENIGN  Predito ATTACK
 Real BENIGN           79485            1255

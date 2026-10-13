@@ -1,4 +1,4 @@
-Treino: cicids2017 | Modelo: mlp | Configuração: RandomizedSearchCV | Teste: unsw_nb15
+Treino: cicids2017 | Modelo: mlp | Teste: unsw_nb15
 
              Predito BENIGN  Predito ATTACK
 Real BENIGN           80503             237

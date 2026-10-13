@@ -1,4 +1,4 @@
-Treino: unsw_nb15 | Modelo: decision_tree | Configuração: RandomizedSearchCV | Teste: iot23
+Treino: unsw_nb15 | Modelo: decision_tree | Teste: iot23
 
               precision    recall  f1-score   support
 
