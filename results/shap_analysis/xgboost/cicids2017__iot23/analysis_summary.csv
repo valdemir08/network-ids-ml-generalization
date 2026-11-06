@@ -1,0 +1,2 @@
+model,training_source,test_source,background_rows,explained_rows,output_scale,top_feature,output_directory
+xgboost,cicids2017,iot23,100,1000,attack_probability,bidirectional_syn_packets,results\shap_analysis\xgboost\cicids2017__iot23

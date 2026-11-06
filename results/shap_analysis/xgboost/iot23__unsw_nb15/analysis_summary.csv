@@ -1,0 +1,2 @@
+model,training_source,test_source,background_rows,explained_rows,output_scale,top_feature,output_directory
+xgboost,iot23,unsw_nb15,100,1000,attack_probability,bidirectional_bytes,results\shap_analysis\xgboost\iot23__unsw_nb15
