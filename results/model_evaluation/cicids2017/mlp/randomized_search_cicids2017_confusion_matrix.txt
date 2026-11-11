@@ -1,5 +1,5 @@
 Treino: cicids2017 | Modelo: mlp | Teste: cicids2017
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           80259             481
-Real ATTACK             134           20051
+Real BENIGN           80324             416
+Real ATTACK             131           20054

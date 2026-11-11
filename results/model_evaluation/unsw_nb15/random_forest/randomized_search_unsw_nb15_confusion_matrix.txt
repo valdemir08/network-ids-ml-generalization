@@ -1,5 +1,5 @@
 Treino: unsw_nb15 | Modelo: random_forest | Teste: unsw_nb15
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           79484            1256
-Real ATTACK              59           20126
+Real BENIGN           79495            1245
+Real ATTACK              30           20155

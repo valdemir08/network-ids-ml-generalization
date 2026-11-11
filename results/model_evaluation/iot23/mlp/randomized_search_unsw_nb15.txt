@@ -2,9 +2,9 @@ Treino: iot23 | Modelo: mlp | Teste: unsw_nb15
 
               precision    recall  f1-score   support
 
-      BENIGN     0.8007    0.9979    0.8885     80740
-      ATTACK     0.4371    0.0065    0.0129     20185
+      BENIGN     0.7832    0.8058    0.7943     80740
+      ATTACK     0.1216    0.1076    0.1142     20185
 
-    accuracy                         0.7996    100925
-   macro avg     0.6189    0.5022    0.4507    100925
-weighted avg     0.7280    0.7996    0.7134    100925
+    accuracy                         0.6662    100925
+   macro avg     0.4524    0.4567    0.4543    100925
+weighted avg     0.6509    0.6662    0.6583    100925

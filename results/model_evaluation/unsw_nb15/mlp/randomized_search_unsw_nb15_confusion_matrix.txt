@@ -1,5 +1,5 @@
 Treino: unsw_nb15 | Modelo: mlp | Teste: unsw_nb15
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           79410            1330
-Real ATTACK              64           20121
+Real BENIGN           79446            1294
+Real ATTACK              53           20132

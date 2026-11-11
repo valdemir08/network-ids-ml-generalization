@@ -1,5 +1,5 @@
 Treino: iot23 | Modelo: mlp | Teste: cicids2017
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           79413            1327
-Real ATTACK           20185               0
+Real BENIGN           77998            2742
+Real ATTACK           19646             539

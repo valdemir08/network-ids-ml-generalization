@@ -2,9 +2,9 @@ Treino: iot23 | Modelo: mlp | Teste: iot23
 
               precision    recall  f1-score   support
 
-      BENIGN     0.9977    1.0000    0.9988     80740
-      ATTACK     0.9999    0.9909    0.9953     20185
+      BENIGN     0.9985    0.9998    0.9992     80740
+      ATTACK     0.9994    0.9939    0.9966     20185
 
-    accuracy                         0.9981    100925
-   macro avg     0.9988    0.9954    0.9971    100925
-weighted avg     0.9982    0.9981    0.9981    100925
+    accuracy                         0.9987    100925
+   macro avg     0.9989    0.9969    0.9979    100925
+weighted avg     0.9987    0.9987    0.9987    100925

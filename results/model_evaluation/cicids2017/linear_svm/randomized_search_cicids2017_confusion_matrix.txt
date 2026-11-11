@@ -1,5 +1,5 @@
 Treino: cicids2017 | Modelo: linear_svm | Teste: cicids2017
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           74600            6140
-Real ATTACK             773           19412
+Real BENIGN           73738            7002
+Real ATTACK             872           19313

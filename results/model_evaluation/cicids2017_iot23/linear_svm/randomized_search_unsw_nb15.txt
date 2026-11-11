@@ -2,9 +2,9 @@ Treino: cicids2017_iot23 | Modelo: linear_svm | Teste: unsw_nb15
 
               precision    recall  f1-score   support
 
-      BENIGN     0.7977    0.9712    0.8759     80740
-      ATTACK     0.1123    0.0146    0.0258     20185
+      BENIGN     0.7991    0.9923    0.8853     80740
+      ATTACK     0.0707    0.0023    0.0045     20185
 
-    accuracy                         0.7799    100925
-   macro avg     0.4550    0.4929    0.4509    100925
-weighted avg     0.6606    0.7799    0.7059    100925
+    accuracy                         0.7943    100925
+   macro avg     0.4349    0.4973    0.4449    100925
+weighted avg     0.6534    0.7943    0.7092    100925

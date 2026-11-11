@@ -2,9 +2,9 @@ Treino: iot23 | Modelo: random_forest | Teste: cicids2017
 
               precision    recall  f1-score   support
 
-      BENIGN     0.8256    0.9666    0.8906     80740
-      ATTACK     0.5788    0.1835    0.2787     20185
+      BENIGN     0.7995    0.9857    0.8829     80740
+      ATTACK     0.1605    0.0109    0.0205     20185
 
-    accuracy                         0.8100    100925
-   macro avg     0.7022    0.5751    0.5846    100925
-weighted avg     0.7763    0.8100    0.7682    100925
+    accuracy                         0.7907    100925
+   macro avg     0.4800    0.4983    0.4517    100925
+weighted avg     0.6717    0.7907    0.7104    100925

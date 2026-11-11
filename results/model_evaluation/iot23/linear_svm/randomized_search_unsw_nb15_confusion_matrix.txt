@@ -1,5 +1,5 @@
 Treino: iot23 | Modelo: linear_svm | Teste: unsw_nb15
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           78149            2591
-Real ATTACK           19123            1062
+Real BENIGN           76963            3777
+Real ATTACK           18920            1265

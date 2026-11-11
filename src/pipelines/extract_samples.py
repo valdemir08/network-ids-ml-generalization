@@ -27,9 +27,13 @@ def _sample_query(dataset_path, label_binary, sample_size):
     return f"""
         SELECT *
         FROM (
-            SELECT *
+            -- remove linhas iguais em todas as colunas, exceto id, mantendo o menor id.
+            SELECT min(id) AS id, * EXCLUDE (id)
             FROM read_parquet('{source_path}')
             WHERE label_binary = '{label_binary}'
+            GROUP BY ALL
+            -- fixa a ordem de entrada do sorteio para reproduzir a amostra.
+            ORDER BY ALL
         )
         USING SAMPLE {sample_size} ROWS (reservoir, {RANDOM_STATE})
     """

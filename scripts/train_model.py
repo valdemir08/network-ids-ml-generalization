@@ -1,3 +1,0 @@
-"""
-treinar modelos.
-"""

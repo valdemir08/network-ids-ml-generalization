@@ -2,9 +2,9 @@ Treino: iot23 | Modelo: linear_svm | Teste: iot23
 
               precision    recall  f1-score   support
 
-      BENIGN     0.9978    0.9987    0.9983     80740
-      ATTACK     0.9949    0.9914    0.9931     20185
+      BENIGN     0.9979    0.9987    0.9983     80740
+      ATTACK     0.9947    0.9918    0.9933     20185
 
     accuracy                         0.9973    100925
-   macro avg     0.9964    0.9951    0.9957    100925
+   macro avg     0.9963    0.9952    0.9958    100925
 weighted avg     0.9973    0.9973    0.9973    100925

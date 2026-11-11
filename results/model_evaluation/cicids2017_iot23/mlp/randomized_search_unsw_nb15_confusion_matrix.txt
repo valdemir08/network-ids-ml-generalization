@@ -1,5 +1,5 @@
 Treino: cicids2017_iot23 | Modelo: mlp | Teste: unsw_nb15
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           80488             252
-Real ATTACK           19317             868
+Real BENIGN           80280             460
+Real ATTACK           19219             966

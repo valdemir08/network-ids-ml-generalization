@@ -1,5 +1,5 @@
 Treino: unsw_nb15_iot23 | Modelo: random_forest | Teste: cicids2017
 
              Predito BENIGN  Predito ATTACK
-Real BENIGN           69790           10950
-Real ATTACK           17888            2297
+Real BENIGN           69830           10910
+Real ATTACK           17743            2442
