@@ -1,0 +1,16 @@
+feature,mean_absolute_shap,mean_signed_shap,output_scale
+bidirectional_psh_packets,8.882857457442725,-1.3759467793299085,decision_margin
+bidirectional_ack_packets,6.339329588161067,1.2841936187181706,decision_margin
+bidirectional_bytes,4.517742908715207,-1.2643494495029448,decision_margin
+bidirectional_packets,2.739085428270873,0.563964265302863,decision_margin
+bidirectional_stddev_ps,1.1767907950183518,-0.02483165665241392,decision_margin
+bidirectional_max_ps,0.9098739697286601,0.01277389911675914,decision_margin
+bidirectional_mean_ps,0.3849043774598911,0.03668499325632466,decision_margin
+bidirectional_syn_packets,0.13667511101230206,-0.006617581230421339,decision_margin
+protocol,0.0621186724525785,0.00039691978067297497,decision_margin
+bidirectional_fin_packets,0.060030460601680186,0.003927638060645475,decision_margin
+bidirectional_max_piat_ms,0.05346521997457887,-0.01167001225683717,decision_margin
+bidirectional_stddev_piat_ms,0.025524508129918293,0.00514424444381415,decision_margin
+bidirectional_duration_ms,0.023223825692242878,0.008520919003378593,decision_margin
+bidirectional_mean_piat_ms,0.0004054976826729452,0.00011334728207203775,decision_margin
+bidirectional_rst_packets,1.427482984143582e-20,-1.427482984143582e-20,decision_margin

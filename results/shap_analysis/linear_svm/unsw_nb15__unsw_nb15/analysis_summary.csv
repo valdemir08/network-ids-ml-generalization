@@ -1,0 +1,2 @@
+model,training_source,test_source,background_rows,explained_rows,output_scale,top_feature,output_directory
+linear_svm,unsw_nb15,unsw_nb15,100,1000,decision_margin,bidirectional_psh_packets,results\shap_analysis\linear_svm\unsw_nb15__unsw_nb15
