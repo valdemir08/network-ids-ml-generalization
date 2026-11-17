@@ -1,0 +1,4 @@
+Base,Ranking - Árvore de decisão,Ranking - Random Forest,Ranking - XGBoost,Ranking - SVM linear,Ranking - MLP,Estatística de Friedman,p-valor
+CICIDS2017,3.7,1.0,2.0,5.0,3.3,114.96,6.36e-24
+UNSW-NB15,3.0,1.27,1.73,5.0,4.0,115.31,5.37e-24
+IoT-23,3.0,2.07,1.0,5.0,3.93,116.91,2.44e-24

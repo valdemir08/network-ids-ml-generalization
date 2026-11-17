@@ -1,6 +1,3 @@
-"""
-colunas que não devem ser usadas no ML, não necessitam passar por análise
-"""
 
 import numpy as np
 import pandas as pd
@@ -225,12 +222,11 @@ identical_features = {
     #("bidirectional_cwr_packets", "src2dst_cwr_packets"),
     #("bidirectional_ece_packets", "dst2src_ece_packets"),
     # média e desvio padrão próximo a 0 para todos esses casos
-    # também não performou no mutual information, mi próximo a 0 para todos esses casos
     "bidirectional_cwr_packets",
     "src2dst_cwr_packets",
     "bidirectional_ece_packets",
     "dst2src_ece_packets",
-    # não estavam nos pares de correlação, mas compartilham da média e desvio padrão próximo a 0.00, mi também irrisório
+    # não estavam nos pares de correlação, mas compartilham da média e desvio padrão próximo a 0.00
     "src2dst_ece_packets",
     "dst2src_cwr_packets",
 
@@ -239,7 +235,6 @@ identical_features = {
     #("bidirectional_syn_packets", "src2dst_syn_packets"),
     # d2s não apareceu em correlação alta, mas indica caminho
     # pacotes > 0 aparecem em 75% dos dados
-    # bidirectional corresponde a 30% da maior nota mi, manter por enquanto, mas testar o impacto em algum modelo de árvore
     "src2dst_syn_packets",
     "dst2src_syn_packets",
     #"bidirectional_syn_packets",
@@ -276,16 +271,6 @@ identical_features = {
     # verificar necessidade de manter min e max ps, pois podem indicar outliers extremos
     # talvez o desvio padrão seja o suficiente para generalizar
 
-    # média e desvio possuem MI elevado
-    # bidirectional_max_ps	MI 0.09 (elevado)
-    # bidirectional_min_ps  MI 0.02 (baixo)
-
-    # testar modelo de árvore
-    # mean
-    # mean + std
-    # mean + max
-    # mean + std + max
-    # decisão de remoção adiada
 
 
     # testes
@@ -294,8 +279,6 @@ identical_features = {
     #
 
 
-    # ----------------------------------------------
-    # como o mínimo apresentou MI baixo, foi removido
     "bidirectional_min_ps",
 
     # piat_pairs
@@ -322,7 +305,6 @@ identical_features = {
 
     # 'bidirectional_min_piat_ms', testado com/sem presença no modelo
     # a remoção não alterou praticamente nada, o que indica redundancia com outras features
-    # isso também é percebido no MI
     'bidirectional_min_piat_ms',
 
 
@@ -341,20 +323,15 @@ identical_features = {
     'dst2src_bytes',
 
 
-    # outros que apresentaram MI muito baixo
-
-    #bidirectional_urg_packets - mi : abaixo de 0.00
-
     "bidirectional_urg_packets",
 
 
 }
-
+# atributos adicionais ignorados, baixo impacto.
 ig_features = {
     "bidirectional_min_ps",
 
     # não mostrou variabilidade o suficiente.
-    #constante no cic, unsw e apenas 5 registros no iot (benignos) com ipv6
     "ip_version",
     #remoção não causou impacto significativo
     "bidirectional_min_piat_ms",

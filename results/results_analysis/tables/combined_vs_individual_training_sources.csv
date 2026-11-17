@@ -1,4 +1,4 @@
-﻿Conjunto de teste,Modelo,Origem individual A,F1-macro — A,Acurácia balanceada — A,Origem individual B,F1-macro — B,Acurácia balanceada — B,Origens combinadas A + B,F1-macro — A + B,Acurácia balanceada — A + B,Δ F1-macro,Δ acurácia balanceada
+﻿Conjunto de teste,Modelo,Primeira origem individual,F1-macro — primeira origem,Acurácia balanceada — primeira origem,Segunda origem individual,F1-macro — segunda origem,Acurácia balanceada — segunda origem,Origens combinadas,F1-macro — combinação,Acurácia balanceada — combinação,Δ F1-macro,Δ acurácia balanceada
 CICIDS2017,DT,UNSW-NB15,0.4297,0.4249,IoT-23,0.7673,0.7483,UNSW-NB15 + IoT-23,0.4208,0.4494,-0.3465,-0.2989
 CICIDS2017,RF,UNSW-NB15,0.4241,0.4201,IoT-23,0.4517,0.4983,UNSW-NB15 + IoT-23,0.4877,0.4929,0.036,-0.0054
 CICIDS2017,XGB,UNSW-NB15,0.4029,0.397,IoT-23,0.4511,0.4923,UNSW-NB15 + IoT-23,0.5043,0.5048,0.0532,0.0125
