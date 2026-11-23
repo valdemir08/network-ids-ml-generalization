@@ -2,3 +2,6 @@ Base,Ordem por ranking médio,Pares sem diferença significativa
 CICIDS2017,1º Random Forest (1.00); 2º XGBoost (2.00); 3º MLP (3.30); 4º Árvore de decisão (3.70); 5º SVM linear (5.00),Árvore de decisão × MLP; Random Forest × XGBoost
 UNSW-NB15,1º Random Forest (1.27); 2º XGBoost (1.73); 3º Árvore de decisão (3.00); 4º MLP (4.00); 5º SVM linear (5.00),Árvore de decisão × MLP; Random Forest × XGBoost; SVM linear × MLP
 IoT-23,1º XGBoost (1.00); 2º Random Forest (2.07); 3º Árvore de decisão (3.00); 4º MLP (3.93); 5º SVM linear (5.00),Árvore de decisão × Random Forest; Árvore de decisão × MLP; Random Forest × XGBoost; SVM linear × MLP
+CICIDS2017 + UNSW-NB15,1º Random Forest (1.00); 2º XGBoost (2.00); 3º Árvore de decisão (3.00); 4º MLP (4.00); 5º SVM linear (5.00),Árvore de decisão × XGBoost; Árvore de decisão × MLP; Random Forest × XGBoost; SVM linear × MLP
+CICIDS2017 + IoT-23,1º Random Forest (1.00); 2º XGBoost (2.00); 3º Árvore de decisão (3.00); 4º MLP (4.00); 5º SVM linear (5.00),Árvore de decisão × XGBoost; Árvore de decisão × MLP; Random Forest × XGBoost; SVM linear × MLP
+UNSW-NB15 + IoT-23,1º Random Forest (1.07); 2º XGBoost (1.93); 3º Árvore de decisão (3.00); 4º MLP (4.00); 5º SVM linear (5.00),Árvore de decisão × XGBoost; Árvore de decisão × MLP; Random Forest × XGBoost; SVM linear × MLP
