@@ -1,6 +1,6 @@
 # Artefatos experimentais — pcc-v1.0
 
-Este documento descreve os artefatos associados aos experimentos de avaliação da generalização de modelos supervisionados aplicados à detecção de intrusão. A versão `pcc-v1.0` disponibiliza os arquivos `datasets.zip` e `modelos.zip`. O código-fonte, os notebooks e os resultados intermediários e finais permanecem no repositório do projeto.
+Este documento descreve os artefatos associados aos experimentos de avaliação da generalização de modelos supervisionados aplicados à detecção de intrusão. A versão `pcc-v1.0` disponibiliza os arquivos `datasets.zip` e `models.zip`. O código-fonte, os notebooks e os resultados intermediários e finais permanecem no repositório do projeto.
 
 ## `datasets.zip`
 
@@ -22,7 +22,7 @@ O campo `label_binary` registra os rótulos binários `BENIGN` e `ATTACK`. Essas
 
 Os arquivos são versões processadas dos datasets públicos CICIDS2017, UNSW-NB15 e IoT-23. A utilização e a redistribuição dos dados devem observar as condições estabelecidas pelas fontes originais.
 
-## `modelos.zip`
+## `models.zip`
 
 Contém 30 pipelines finais armazenados no formato Joblib. Para cada um dos cinco algoritmos, são disponibilizados seis modelos, correspondentes às três bases individuais e às três combinações de duas bases utilizadas como origens de treinamento.
 
